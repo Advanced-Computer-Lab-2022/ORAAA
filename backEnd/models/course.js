@@ -1,6 +1,11 @@
 //exercises?/subtitles?/
 const mongoose = require('mongoose')
 const courseSchema= mongoose.Schema({
+    instructorId:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:'instructor'
+    },
     title: {
         type:String,
         required:[true,'please enter title'],
@@ -35,6 +40,10 @@ const courseSchema= mongoose.Schema({
         min:0,
         max:10,
         required:[false],
+    },
+    subject:{
+        type:String,
+        required:[true,'please enter the course subject']
     }
 
 
