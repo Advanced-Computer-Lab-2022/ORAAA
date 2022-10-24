@@ -1,8 +1,10 @@
 //ask in private and public
 //const { text } = require('express')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 const asyncHandler = require('express-async-handler')
 const OCourse = require('../models/course')
-
+const Oinstructor= require('../models/instructor')
 
 
 
@@ -13,11 +15,13 @@ const OCourse = require('../models/course')
 
 
 //@desc Instructor creates a course
-//@route POST /api/instructor
+//@route POST /api/instructor/createCourse
 //@access private
 const createCourse= asyncHandler(async(req,res)=>{
-    const{title, price,shortSummery , subTitle,instructorId,subject} = req.body
-    if(!title || !price || !shortSummery || !subTitle || !instructorId || !subject){
+    const {_id} = await Oinstructor.findById(req.Ninstructor.id)
+    const instructorId = _id
+    const{title, price,shortSummery , subTitle,subject} = req.body
+    if(!title || !price || !shortSummery || !subTitle || !subject){
         res.status(400)
         throw new Error('Please Fill All The UnFilled Fields')
     }
@@ -44,11 +48,18 @@ const createCourse= asyncHandler(async(req,res)=>{
    
 })
 
+//@desc Instructor gets all his course titles
+//@route get /api/instructor/getCourseTitle
+//@access private
 const getCourseTitles= asyncHandler(async(req,res)=>{
-    const Ctitles = await OCourse.find({'instructorId':req.body.ID},{title:1,_id:0 })
+    const {_id} = await Oinstructor.findById(req.Ninstructor.id)
+    const Ctitles = await OCourse.find({'instructorId':_id},{title:1,_id:0 })
     res.status(200).json(Ctitles)
 })
 
+//@desc Instructor filters a course based on price or subject
+//@route get /api/instructor/filterCourses
+//@access private
 const filterCourses= asyncHandler(async(req,res)=>{
     
     const Ccourses = await OCourse.find({$and:[{$or:[{'subject':req.body.subject} ,{'price':req.body.price}]},{'instructorId':req.body.ID}]} )
@@ -56,9 +67,39 @@ const filterCourses= asyncHandler(async(req,res)=>{
     
 })
 
+//@desc Instructor login
+//@route POST /api/instructor/Login
+//@access private
+const instructorLogin = asyncHandler(async(req,res)=>{
+    const {userName,password} = req.body
+
+    const Ninstructor = await Oinstructor.findOne({userName})
+      
+    if(Ninstructor && (await bcrypt.compare(password,Ninstructor.password))){
+        res.json({
+            name: Ninstructor.userName,
+            token: generateToken(Ninstructor._id)
+        })
+
+
+
+    }else{
+        res.status(400)
+        throw new Error('Invalid userName or password')
+    }
+})
+
+
+// Generate JWT
+const generateToken = (id) =>{
+    return jwt.sign({id},process.env.JWT_SECRET,{
+        expiresIn: '30d',
+    })
+}
 
 module.exports={
     createCourse,
     getCourseTitles,
-    filterCourses
+    filterCourses,
+    instructorLogin
 }

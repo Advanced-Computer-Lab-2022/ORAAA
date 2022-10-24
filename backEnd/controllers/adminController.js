@@ -1,4 +1,6 @@
 //const { text } = require('express')
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 const asyncHandler=require('express-async-handler')
 const Oinstructor =require('../models/instructor')
 const Oadmin=require('../models/admin')
@@ -9,17 +11,36 @@ const OcorporateTrainee=require('../models/corporateTrainee')
 //@access private
 const addInstructor= asyncHandler(async(req,res)=>{
     const{userName,password} = req.body
+
+    //make sure that the fields are filled
     if(!userName || !password){
         res.status(400)
         throw new Error('Please Fill All The UnFilled Fields')
     }
+    
+    //check if instructor exists
+    const instructorExist = await Oinstructor.findOne({userName})
+    if(instructorExist){
+        res.status(400)
+        throw new Error('Instructor already Exists')
+
+    }
+
+    //Hash password
+    const salt = await bcrypt.genSalt(10)
+    const hashedPaasword = await bcrypt.hash(password,salt)
+
+
+    //create Instructor
     const Ninstructor=await Oinstructor.create({
         userName,
-        password
+        password: hashedPaasword
     })
+
     if(Ninstructor){
         res.status(201).json({
             userName:Ninstructor.userName,
+            
                         
         })
     }else{
