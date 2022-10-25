@@ -67,39 +67,10 @@ const filterCourses= asyncHandler(async(req,res)=>{
     
 })
 
-//@desc Instructor login
-//@route POST /api/instructor/Login
-//@access private
-const instructorLogin = asyncHandler(async(req,res)=>{
-    const {userName,password} = req.body
-
-    const Ninstructor = await Oinstructor.findOne({userName})
-      
-    if(Ninstructor && (await bcrypt.compare(password,Ninstructor.password))){
-        res.json({
-            name: Ninstructor.userName,
-            token: generateToken(Ninstructor._id)
-        })
-
-
-
-    }else{
-        res.status(400)
-        throw new Error('Invalid userName or password')
-    }
-})
-
-
-// Generate JWT
-const generateToken = (id) =>{
-    return jwt.sign({id},process.env.JWT_SECRET,{
-        expiresIn: '30d',
-    })
-}
 
 module.exports={
     createCourse,
     getCourseTitles,
     filterCourses,
-    instructorLogin
+    
 }

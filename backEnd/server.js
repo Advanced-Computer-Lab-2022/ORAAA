@@ -15,8 +15,8 @@ app.use(urlencoded({extended: false }))
 
 app.use('/api/website',require('./routes/WebsiteRoutes'))
 app.use('/api/instructor',require('./routes/instructorRoutes'))
-app.use('/api/admin',require('./routes/adminRoutes.js'))
-
+app.use('/api/admin',require('./routes/adminRoutes'))
+app.use('/api/common',require('./routes/commonRoutes'))
 
 
 app.use(errorHandler)

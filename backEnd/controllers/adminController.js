@@ -28,13 +28,13 @@ const addInstructor= asyncHandler(async(req,res)=>{
 
     //Hash password
     const salt = await bcrypt.genSalt(10)
-    const hashedPaasword = await bcrypt.hash(password,salt)
+    const hashedPassword = await bcrypt.hash(password,salt)
 
 
     //create Instructor
     const Ninstructor=await Oinstructor.create({
         userName,
-        password: hashedPaasword
+        password: hashedPassword
     })
 
     if(Ninstructor){
@@ -60,9 +60,23 @@ const addAdmin= asyncHandler(async(req,res)=>{
         res.status(400)
         throw new Error('Please Fill All The UnFilled Fields')
     }
+    //check if Admin exists
+    const adminExist = await Oadmin.findOne({userName})
+    if(adminExist){
+        res.status(400)
+        throw new Error('Admin already Exists')
+
+    }
+
+     //Hash password
+     const salt = await bcrypt.genSalt(10)
+     const hashedPassword = await bcrypt.hash(password,salt)
+
+
+    //create admin
     const Nadmin=await Oadmin.create({
         userName,
-        password
+        password: hashedPassword
     })
     if(Nadmin){
         res.status(201).json({
@@ -85,9 +99,27 @@ const addCorporateTrainee= asyncHandler(async(req,res)=>{
         res.status(400)
         throw new Error('Please Fill All The UnFilled Fields')
     }
+
+     //check if corporateTrainee exists
+     const corporateTraineeExist = await OcorporateTrainee.findOne({userName})
+     if(corporateTraineeExist){
+         res.status(400)
+         throw new Error('corporateTrainee already Exists')
+ 
+     }
+ 
+      //Hash password
+      const salt = await bcrypt.genSalt(10)
+      const hashedPassword = await bcrypt.hash(password,salt)
+
+
+
+
+
+    //create corporateTrainee
     const NcorporateTrainee=await OcorporateTrainee.create({
         userName,
-        password
+        password: hashedPassword
     })
     if(NcorporateTrainee){
         res.status(201).json({
