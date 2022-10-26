@@ -5,7 +5,7 @@ const { createCourse, getCourseTitles,filterCourses}=require('../controllers/ins
 const {protect} = require('../middleWare/authMiddleware')
 router.post('/createCourse',protect,createCourse)
 router.get('/getCourseTitle',protect,getCourseTitles)
-router.get('/filterCourses',filterCourses)
+router.get('/filterCourses',protect,filterCourses)
 
 
 module.exports=router

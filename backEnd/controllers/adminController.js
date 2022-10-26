@@ -10,7 +10,7 @@ const OcorporateTrainee=require('../models/corporateTrainee')
 //@route POST /api/admin/addInstructor
 //@access private
 const addInstructor= asyncHandler(async(req,res)=>{
-    const{userName,password} = req.body
+    const{userName,password,country} = req.body
 
     //make sure that the fields are filled
     if(!userName || !password){
@@ -34,7 +34,9 @@ const addInstructor= asyncHandler(async(req,res)=>{
     //create Instructor
     const Ninstructor=await Oinstructor.create({
         userName,
-        password: hashedPassword
+        password: hashedPassword,
+        country
+
     })
 
     if(Ninstructor){
@@ -94,7 +96,7 @@ const addAdmin= asyncHandler(async(req,res)=>{
 //@route POST /api/admin/addCorporateTrainee
 //@access private
 const addCorporateTrainee= asyncHandler(async(req,res)=>{
-    const{userName,password} = req.body
+    const{userName,password,country} = req.body
     if(!userName || !password){
         res.status(400)
         throw new Error('Please Fill All The UnFilled Fields')
@@ -119,7 +121,8 @@ const addCorporateTrainee= asyncHandler(async(req,res)=>{
     //create corporateTrainee
     const NcorporateTrainee=await OcorporateTrainee.create({
         userName,
-        password: hashedPassword
+        password: hashedPassword,
+        country
     })
     if(NcorporateTrainee){
         res.status(201).json({

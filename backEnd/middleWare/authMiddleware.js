@@ -17,9 +17,15 @@ if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
        const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
        //get user from token
-       req.Ninstructor= await Oinstructor.findById(decoded.id).select('-password')
-       req.Nadmin= await Oadmin.findById(decoded.id).select('-password')
-       req.NcorporateTrainee= await OcorporateTrainee.findById(decoded.id).select('-password')
+       req.user= await Oinstructor.findById(decoded.id).select('-password')
+       if(!req.user){
+        req.user= await Oadmin.findById(decoded.id).select('-password')
+       }
+       if(!req.user){
+        req.user= await OcorporateTrainee.findById(decoded.id).select('-password')
+       }
+       
+       
        
        next()
     } catch (error) {

@@ -44,6 +44,11 @@ const courseSchema= mongoose.Schema({
     subject:{
         type:String,
         required:[true,'please enter the course subject']
+    },
+    rating:{
+        type:Number,
+        max:10,
+        min:1
     }
 
 

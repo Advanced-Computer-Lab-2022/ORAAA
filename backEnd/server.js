@@ -13,10 +13,11 @@ const app = express()
 app.use(express.json())
 app.use(urlencoded({extended: false }))
 
-app.use('/api/website',require('./routes/WebsiteRoutes'))
+
 app.use('/api/instructor',require('./routes/instructorRoutes'))
 app.use('/api/admin',require('./routes/adminRoutes'))
 app.use('/api/common',require('./routes/commonRoutes'))
+app.use('/api/',require('./routes/guestRoutes'))
 
 
 app.use(errorHandler)

@@ -12,7 +12,12 @@ const corporateTraineeSchema= mongoose.Schema({
     email:{
         type:String
 
-    }
+    },
+    country:{
+        type:String,
+        
+
+    }, 
 },
     {
         timestamps:true

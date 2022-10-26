@@ -29,6 +29,10 @@ const instructorSchema= mongoose.Schema({
         min:0,
         max:10
 
+    }, country:{
+        type:String,
+        
+
     }, 
 },
 {

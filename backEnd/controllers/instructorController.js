@@ -18,10 +18,10 @@ const Oinstructor= require('../models/instructor')
 //@route POST /api/instructor/createCourse
 //@access private
 const createCourse= asyncHandler(async(req,res)=>{
-    const {_id} = await Oinstructor.findById(req.Ninstructor.id)
+    const {_id} = await Oinstructor.findById(req.user.id)
     const instructorId = _id
-    const{title, price,shortSummery , subTitle,subject} = req.body
-    if(!title || !price || !shortSummery || !subTitle || !subject){
+    const{title, price,shortSummery , subTitle,subject,totalHoursOfCourse,rating} = req.body
+    if(!title || !price || !shortSummery || !subTitle || !subject || !totalHoursOfCourse){
         res.status(400)
         throw new Error('Please Fill All The UnFilled Fields')
     }
@@ -31,7 +31,9 @@ const createCourse= asyncHandler(async(req,res)=>{
         price,
         shortSummery, 
         subject,
-        subTitle
+        subTitle,
+        totalHoursOfCourse,
+        rating
     })
     if(Ncourse){
         res.status(201).json({
@@ -52,7 +54,7 @@ const createCourse= asyncHandler(async(req,res)=>{
 //@route get /api/instructor/getCourseTitle
 //@access private
 const getCourseTitles= asyncHandler(async(req,res)=>{
-    const {_id} = await Oinstructor.findById(req.Ninstructor.id)
+    const {_id} = await Oinstructor.findById(req.user.id)
     const Ctitles = await OCourse.find({'instructorId':_id},{title:1,_id:0 })
     res.status(200).json(Ctitles)
 })
@@ -61,8 +63,8 @@ const getCourseTitles= asyncHandler(async(req,res)=>{
 //@route get /api/instructor/filterCourses
 //@access private
 const filterCourses= asyncHandler(async(req,res)=>{
-    
-    const Ccourses = await OCourse.find({$and:[{$or:[{'subject':req.body.subject} ,{'price':req.body.price}]},{'instructorId':req.body.ID}]} )
+    const {_id} = await Oinstructor.findById(req.user.id)
+    const Ccourses = await OCourse.find({$and:[{$or:[{'subject':req.body.subject} ,{'price':req.body.price}]},{'instructorId':_id}]} )
     res.status(200).json(Ccourses)
     
 })
