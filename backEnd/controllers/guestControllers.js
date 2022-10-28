@@ -1,6 +1,9 @@
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 const asyncHandler = require('express-async-handler')
 const Oguest = require('../models/guest')
 const Ocourse = require('../models/course')
+const OindividualTrainee= require('../models/individualTrainee')
 
 
 
@@ -77,8 +80,62 @@ const filterCourses = asyncHandler(async(req,res)=>{
 })
 
 
+// @desc    Register new user
+// @route   POST /api/signup
+// @access  Public
+const signup = asyncHandler(async (req, res) => {
+    const { userName,firstName,lastName,gender,country, email, password } = req.body
+  
+    if (!userName || !email || !password || !firstName || !lastName || !gender) {
+      res.status(400)
+      throw new Error('Please fill all the required fields')
+    }
+  
+    // Check if user exists
+    const userExists = await OindividualTrainee.findOne({$or:[{ email },{userName}]})
+  
+    if (userExists) {
+      res.status(400)
+      throw new Error('userName or emailAddress already exists')
+    }
+  
+    // Hash password
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(password, salt)
+  
+    // Create individualtrainee
+    const NindividualTrainee = await OindividualTrainee.create({
+      userName,
+      firstName,
+      lastName,
+      gender,
+      country,
+      email,
+      password: hashedPassword,
+    })
+  
+    if (NindividualTrainee) {
+      res.status(201).json({
+        _id: NindividualTrainee.id,
+        name: NindividualTrainee.userName,
+        email: NindividualTrainee.email,
+        token: generateToken(NindividualTrainee._id)
+      })
+    } else {
+      res.status(400)
+      throw new Error('Invalid user data')
+    }
+  })
 
 
+
+
+// Generate JWT
+const generateToken = (id) =>{
+    return jwt.sign({id},process.env.JWT_SECRET,{
+        expiresIn: '30d',
+    })
+}
 
 
 
@@ -90,6 +147,7 @@ module.exports={
     
     selectCountry,
     viewCourses,
-    filterCourses
+    filterCourses,
+    signup
 
 }

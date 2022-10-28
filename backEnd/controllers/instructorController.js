@@ -69,10 +69,21 @@ const filterCourses= asyncHandler(async(req,res)=>{
     
 })
 
+//@desc Instructor searches for his courses based on title or subject
+//@route get /api/instructor/searchInstructorCourses
+//@access private
+const searchInstructorCourses= asyncHandler(async(req,res)=>{
+    const {_id} = await Oinstructor.findById(req.user.id)
+    const Ccourses = await OCourse.find({$and:[{$or:[{'subject':req.body.subject} ,{'title':req.body.title}]},{'instructorId':_id}]} )
+    res.status(200).json(Ccourses)
+    
+})
+
 
 module.exports={
     createCourse,
     getCourseTitles,
     filterCourses,
+    searchInstructorCourses
     
 }

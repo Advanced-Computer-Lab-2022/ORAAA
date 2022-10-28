@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const corporateTraineeSchema= mongoose.Schema({
     userName: {
         type:String,
+        unique:[true],
         required:[true,'please enter your userName'],
     },
     password:{
@@ -10,7 +11,8 @@ const corporateTraineeSchema= mongoose.Schema({
 
     },
     email:{
-        type:String
+        type:String,
+        unique:[true]
 
     },
     country:{

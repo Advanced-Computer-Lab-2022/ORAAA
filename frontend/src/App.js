@@ -5,6 +5,7 @@ import Header from './components/Header';
 import DashBoard from './pages/DashBoard'
 import Login from './pages/Login'
 import Register from './pages/Register';
+import MainIndividualTrainee from './pages/MainIndividualTrainee';
 function App() {
   return (
     <>
@@ -15,6 +16,7 @@ function App() {
           <Route path='/' element={<DashBoard/>} />
           <Route path='/login' element={<Login/>} />
           <Route path='/register' element={<Register/>} />
+          <Route path='/mainIndividualTrainee' element={<MainIndividualTrainee/>} />
        </Routes>
       </div>
      </Router>

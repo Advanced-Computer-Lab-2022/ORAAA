@@ -3,6 +3,7 @@ const asyncHandler= require('express-async-handler')
 const Oinstructor = require('../models/instructor')
 const Oadmin= require('../models/admin')
 const OcorporateTrainee=require('../models/corporateTrainee')
+const OindividualTrainee=require('../models/individualTrainee')
 
 
 const protect = asyncHandler(async(req,res,next)=>{
@@ -23,6 +24,9 @@ if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')){
        }
        if(!req.user){
         req.user= await OcorporateTrainee.findById(decoded.id).select('-password')
+       }
+       if(!req.user){
+        req.user= await OindividualTrainee.findById(decoded.id).select('-password')
        }
        
        

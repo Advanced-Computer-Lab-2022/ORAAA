@@ -4,6 +4,8 @@ const Oinstructor= require('../models/instructor')
 const Oadmin= require('../models/admin')
 const Ocourse= require('../models/course')
 const OcorporateTrainee=require('../models/corporateTrainee')
+const OindividualTrainee=require('../models/individualTrainee')
+
 const asyncHandler = require('express-async-handler')
 
 
@@ -19,6 +21,7 @@ const login = asyncHandler(async(req,res)=>{
     const Ninstructor = await Oinstructor.findOne({userName})
     const Nadmin = await Oadmin.findOne({userName})
     const NcorporateTrainee = await OcorporateTrainee.findOne({userName})
+    const NindividualTrainee = await OindividualTrainee.findOne({userName})
       
     if(Ninstructor && (await bcrypt.compare(password,Ninstructor.password))){
         
@@ -43,6 +46,13 @@ const login = asyncHandler(async(req,res)=>{
         })
 
 
+    }else if(NindividualTrainee && (await bcrypt.compare(password,NindividualTrainee.password))){
+        res.json({
+            name: NindividualTrainee.userName,
+            token: generateToken(NindividualTrainee._id)
+        })
+
+
     }else{
         res.status(400)
         throw new Error('Invalid userName or password')
@@ -55,10 +65,10 @@ const login = asyncHandler(async(req,res)=>{
 //@route PUT /api/common/selectCountry
 //@access private
 const selectCountry = asyncHandler(async(req,res)=>{
-    const {country} = req.body
     const _id=req.user.id
      const NcorporateTrainee = await OcorporateTrainee.findOne({_id})
      const Ninstructor = await Oinstructor.findOne({_id})
+     const NindividualTrainee = await OindividualTrainee.findOne({_id})
     
     if(Ninstructor){
         console.log('hi')
@@ -68,6 +78,11 @@ const selectCountry = asyncHandler(async(req,res)=>{
     }else if(NcorporateTrainee){
         console.log('hi')
         const updateCountry= await OcorporateTrainee.findByIdAndUpdate(_id,req.body,{new:true})
+        res.status(200).json(updateCountry)
+
+    }else if(NindividualTrainee){
+        console.log('hi')
+        const updateCountry= await OindividualTrainee.findByIdAndUpdate(_id,req.body,{new:true})
         res.status(200).json(updateCountry)
 
     }else{
@@ -189,6 +204,24 @@ const searchForCourses = asyncHandler(async(req,res)=>{
 })
 
 
+//@desc  Viewing specific course detail
+//@route get /api/common/chooseCourseToView
+//@access private
+const chooseCourseToView = asyncHandler(async(req,res)=>{
+    
+        const Ncourse= await Ocourse.find({'_id':req.body.id})
+       
+    if(Ncourse){
+        res.status(200).json(Ncourse)
+    
+    }else{
+       res.status(404)
+       throw new Error('course not found')
+    }
+
+})
+
+
 
 
 
@@ -207,6 +240,7 @@ module.exports={
     selectCountry,
     viewCourses,
     filterCourses,
-    searchForCourses
+    searchForCourses,
+    chooseCourseToView
 
 }

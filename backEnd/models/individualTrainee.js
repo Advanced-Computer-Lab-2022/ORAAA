@@ -3,6 +3,7 @@ const course = require('../models/course')
 const individualTraineeSchema= mongoose.Schema({
     userName: {
         type:String,
+        unique:[true],
         required:[true,'please enter your userName'],
     },
     firstName: {
@@ -24,6 +25,7 @@ const individualTraineeSchema= mongoose.Schema({
     },
     email:{
         type: String,
+        unique:[true],
         required:[true,'please enter your email address'],
 
     },
@@ -32,13 +34,13 @@ const individualTraineeSchema= mongoose.Schema({
         
 
     }, 
-   /* 
+   
     inrolledCourses:{
-        type:[mongoose.Types.ObjectId]
-        ref:'':
+        type:[]
+        
      
     }
-    */
+
     
   
 

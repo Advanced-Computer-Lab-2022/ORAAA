@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const instructorSchema= mongoose.Schema({
     userName: {
         type:String,
+        unique:[true],
         required:[true,'please enter your userName'],
     },
     password:{
@@ -11,6 +12,7 @@ const instructorSchema= mongoose.Schema({
     },
     email:{
         type: String,
+        unique:[true]
         //required:[true,'please enter your email address'],
 
     },
