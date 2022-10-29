@@ -160,7 +160,7 @@ if (isLoading) {
           </div>
           <div className="form-group">
             <button type='submit' className='btn btn-block'>
-              Craete Account
+              Create Account
             </button>
           </div>
       </form>
