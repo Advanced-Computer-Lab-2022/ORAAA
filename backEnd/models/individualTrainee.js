@@ -39,7 +39,10 @@ const individualTraineeSchema= mongoose.Schema({
         type:[]
         
      
-    }
+    }, instance:{
+        type:String,
+        default:'individualTrainee'
+    } 
 
     
   

@@ -33,9 +33,14 @@ const instructorSchema= mongoose.Schema({
 
     }, country:{
         type:String,
+        default:''
         
 
-    }, 
+    },
+    instance:{
+        type:String,
+        default:'instructor'
+    } 
 },
 {
     timestamps:true

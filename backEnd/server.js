@@ -11,7 +11,7 @@ connectDB()
 const app = express()
 
 app.use(express.json())
-app.use(urlencoded({extended: false }))
+app.use(urlencoded({extended: true }))
 
 
 app.use('/api/instructor',require('./routes/instructorRoutes'))

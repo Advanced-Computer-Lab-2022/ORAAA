@@ -6,11 +6,13 @@ import { toast } from 'react-toastify'
 import { login, reset } from '../features/auth/authSlice'
 import Spinner from '../components/Spinner'
 
+
 function Login() {
   const [formData, setFormData] = useState({
     userName: '',
     password: '',
   })
+
 
   const { userName, password } = formData
 
@@ -27,8 +29,17 @@ function Login() {
     }
 
     if (isSuccess || user) {
-      navigate('/')
+     const u =  JSON.parse(window.localStorage.getItem('user'));
+     if(u.typee==='corporateTrainee'){
+      navigate('/corporateTrainee')
+     }else if(u.typee==='individualTrainee'){
+        navigate('/mainIndividualTrainee')
+     }else if(u.typee==='instructor'){
+         navigate('/instructor')
+    }else{
+      navigate('/admin')
     }
+  }
 
     dispatch(reset())
   }, [user, isError, isSuccess, message, navigate, dispatch])
@@ -89,7 +100,7 @@ function Login() {
             />
           </div>
 
-          <div className='form-group'>
+           <div className='form-group'>
             <button type='submit' className='btn btn-block'>
               Submit
             </button>

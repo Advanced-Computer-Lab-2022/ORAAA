@@ -19,7 +19,11 @@ const corporateTraineeSchema= mongoose.Schema({
         type:String,
         
 
-    }, 
+    },
+    instance:{
+        type:String,
+        default:'corporateTrainee'
+    }  
 },
     {
         timestamps:true

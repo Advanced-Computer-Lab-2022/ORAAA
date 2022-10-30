@@ -6,6 +6,12 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register';
 import MainIndividualTrainee from './pages/MainIndividualTrainee';
+import SearchResults from './pages/SearchResults';
+import Instructor from './pages/Instructor';
+import Admin from './pages/Admin';
+import CorporateTrainee from './pages/CorporateTrainee';
+import InstructorCreateCourse from './pages/InstructorCreateCourse';
+import ViewCourseTitles from './pages/ViewCourseTitles';
 function App() {
   return (
     <>
@@ -17,6 +23,12 @@ function App() {
           <Route path='/login' element={<Login/>} />
           <Route path='/register' element={<Register/>} />
           <Route path='/mainIndividualTrainee' element={<MainIndividualTrainee/>} />
+          <Route path='/searchresults' element={<SearchResults/>} />
+          <Route path='/instructor' element={<Instructor/>} />
+          <Route path='/admin' element={<Admin/>} />
+          <Route path='/corporateTrainee' element={<CorporateTrainee/>} />
+          <Route path='/InstructorCreateCourse' element={<InstructorCreateCourse/>} />
+          <Route path='/ViewCourseTitles' element={<ViewCourseTitles/>} />
        </Routes>
       </div>
      </Router>

@@ -35,12 +35,6 @@ const courseSchema= mongoose.Schema({
         required:[false],
         
     },
-    courseRating:{
-        type:Number,
-        min:0,
-        max:10,
-        required:[false],
-    },
     subject:{
         type:String,
         required:[true,'please enter the course subject']

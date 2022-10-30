@@ -27,6 +27,39 @@ export const getCourses = createAsyncThunk('courses/getAll', async (_, thunkAPI)
     }
   )
 
+  //get all instructer course title
+export const getinstructerCoursesTitle = createAsyncThunk('courses/getinstructerCoursesTitle', async (_, thunkAPI) => {
+  try {
+    const token =  thunkAPI.getState().auth.user.token
+     return await courseService.getinstructerCoursesTitle(token)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
+)
+
+  //search for courses
+  export const searchForCourse = createAsyncThunk('courses/search', async (coursedata, thunkAPI) => {
+    try {
+       return await courseService.searchForCourse(coursedata)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 
 
 
@@ -48,6 +81,33 @@ export const getCourses = createAsyncThunk('courses/getAll', async (_, thunkAPI)
             state.courses = action.payload
           })
           .addCase(getCourses.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(getinstructerCoursesTitle.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(getinstructerCoursesTitle.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.courses = action.payload
+          })
+          .addCase(getinstructerCoursesTitle.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+
+          .addCase(searchForCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(searchForCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.courses = action.payload
+          })
+          .addCase(searchForCourse.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

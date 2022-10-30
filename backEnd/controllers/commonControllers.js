@@ -27,7 +27,8 @@ const login = asyncHandler(async(req,res)=>{
         
         res.json({
             name: Ninstructor.userName,
-            token: generateToken(Ninstructor._id)
+            token: generateToken(Ninstructor._id),
+            typee: Ninstructor.instance
         })
 
 
@@ -35,21 +36,24 @@ const login = asyncHandler(async(req,res)=>{
     }else if(Nadmin && (await bcrypt.compare(password,Nadmin.password))){
         res.json({
             name: Nadmin.userName,
-            token: generateToken(Nadmin._id)
+            token: generateToken(Nadmin._id),
+            typee: Nadmin.instance
         })
 
 
     }else if(NcorporateTrainee && (await bcrypt.compare(password,NcorporateTrainee.password))){
         res.json({
             name: NcorporateTrainee.userName,
-            token: generateToken(NcorporateTrainee._id)
+            token: generateToken(NcorporateTrainee._id),
+            typee: NcorporateTrainee.instance
         })
 
 
     }else if(NindividualTrainee && (await bcrypt.compare(password,NindividualTrainee.password))){
         res.json({
             name: NindividualTrainee.userName,
-            token: generateToken(NindividualTrainee._id)
+            token: generateToken(NindividualTrainee._id),
+            typee: NindividualTrainee.instance
         })
 
 
@@ -71,6 +75,7 @@ const selectCountry = asyncHandler(async(req,res)=>{
      const NindividualTrainee = await OindividualTrainee.findOne({_id})
     
     if(Ninstructor){
+        console.log(req.body)
         console.log('hi')
         const updateCountry= await Oinstructor.findByIdAndUpdate(_id,req.body,{new:true})
         res.status(200).json(updateCountry)
@@ -173,32 +178,29 @@ const filterCourses = asyncHandler(async(req,res)=>{
 //@route get /api/common/searchForCourses
 //@access private
 const searchForCourses = asyncHandler(async(req,res)=>{
-    const {subject,title,userName} = req.body
+    const {keyword} = req.body
     let _id
-    if(userName){
-    const Ninstructor = await Oinstructor.findOne({userName})
-        _id =Ninstructor._id
-    }
-    
-    
-    if(!subject && !title && !_id){
+    let Ccourses
+    if(!keyword){
         res.status(400)
         throw new Error('please fill the unfilled fields')
     }
-
-    if((!subject && title && !_id) || (subject && !title && !_id) || (!subject && !title && _id)){
-        const Ccourses = await Ocourse.find({$or:[{'subject':req.body.subject} ,{'title':req.body.title},{'instructorId':_id}]} )
-        if(Ccourses.length!==0){
-            res.status(200).json(Ccourses)
-        }else{
-            res.status(404)
-            throw new Error('Course not found')
-        }
+    
+    Ccourses = await Ocourse.find({$or:[{'subject':keyword} ,{'title':keyword}]})
        
+   
+    if(Ccourses.length===0){
+    const Ninstructor = await Oinstructor.findOne({'userName':keyword})
+        _id =Ninstructor._id
+        Ccourses = await Ocourse.find({'instructorId':_id})
+    }
+    
+    
+    if(Ccourses.length!==0){
+        res.status(200).json(Ccourses)
     }else{
-        res.status(400)
-        throw new Error('Please choose only one search method')
-
+        res.status(404)
+        throw new Error('Course not found')
     }
 
 })
@@ -209,7 +211,7 @@ const searchForCourses = asyncHandler(async(req,res)=>{
 //@access private
 const chooseCourseToView = asyncHandler(async(req,res)=>{
     
-        const Ncourse= await Ocourse.find({'_id':req.body.id})
+        const Ncourse= await Ocourse.find()
        
     if(Ncourse){
         res.status(200).json(Ncourse)

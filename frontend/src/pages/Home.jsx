@@ -1,10 +1,11 @@
-import CourseForm from '../components/CourseForm'
+import SearchBarForm from '../components/SearchBarForm'
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+//import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import CourseItem from '../components/CourseItem'
 import Spinner from '../components/Spinner'
-import { getCourses, reset } from '../features/courses/courseSlice'
+import SelectCountryForm from '../components/SelectCountryForm'
+import { getCourses, reset} from '../features/courses/courseSlice'
 
 
 function Home() {
@@ -17,8 +18,10 @@ function Home() {
         console.log(message)
       }
     
-    
+      
       dispatch(getCourses())
+      
+      
 
       return () => {
         dispatch(reset())
@@ -28,13 +31,14 @@ function Home() {
 
 
   if (isLoading) {
-    return <Spinner />
+    return <Spinner/>
   }
 
   return (
     <>
+    <section><SelectCountryForm/></section>
       <section className='heading'>
-      <CourseForm />
+      <SearchBarForm/>
       </section>
       <section className='content'>
         {courses.length > 0 ? (
@@ -47,6 +51,7 @@ function Home() {
           <h3>You have not set any goals</h3>
         )}
       </section>
+      
       
 
       

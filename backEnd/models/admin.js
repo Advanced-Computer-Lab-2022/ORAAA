@@ -9,7 +9,11 @@ const adminSchema= mongoose.Schema({
         type: String,
         required:[true,'please enter your password'],
 
-    }
+    },
+    instance:{
+        type:String,
+        default:'admin'
+    } 
 },
     {
         timestamps:true
