@@ -8,6 +8,7 @@ import {useDispatch} from'react-redux'
 import SearchBarForm from '../components/SearchBarForm'
 import { getCourses,reset } from '../features/courses/courseSlice'
 import ChooseCountryForm from '../components/ChooseCountryForm'
+import FilterForm from '../components/FilterForm'
 
 function Instructor() {
 
@@ -82,6 +83,9 @@ if (isLoading || cisLoading) {
     </section>
      <br></br>
      <SearchBarForm/>
+      <br></br>
+      <br></br>
+      <FilterForm/>
       <br></br>
     <section className='content'>
         {courses.length > 0 ? (

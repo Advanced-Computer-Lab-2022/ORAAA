@@ -1,27 +1,23 @@
-import SearchBarForm from '../components/SearchBarForm'
 import { useEffect } from 'react'
-//import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
-import CourseItem from '../components/CourseItem'
 import Spinner from '../components/Spinner'
-import SelectCountryForm from '../components/SelectCountryForm'
-import { getCourses, reset} from '../features/courses/courseSlice'
-import FilterForm from '../components/FilterForm'
+import { reset} from '../features/courses/courseSlice'
+import { toast } from 'react-toastify'
+import CorporateCourseItem from '../components/CorporateCourseItem'
 
-
-function Home() {
+function CorporateFilterResult() {
   const dispatch = useDispatch()
   const { courses, isLoading, isError, message } = useSelector(
     (state) => state.courses)
 
     useEffect(() => {
       if (isError) {
-        console.log(message)
-      }
+        toast.error(message)
     
+      }
+
       
-      dispatch(getCourses())
-      
+        
       
 
       return () => {
@@ -37,22 +33,15 @@ function Home() {
 
   return (
     <>
-    <section><SelectCountryForm/></section>
-      <section className='heading'>
-      <SearchBarForm/>
-      </section>
-      <br></br>
-      <FilterForm/>
-      <br></br>
       <section className='content'>
         {courses.length > 0 ? (
           <div className='goals'>
             {courses.map((course) => (
-              <CourseItem key={course._id} course={course} />
+              <CorporateCourseItem key={course._id} course={course} />
             ))}
           </div>
         ) : (
-          <h3>No courses Available</h3>
+          <h3>Course Not Found</h3>
         )}
       </section>
       
@@ -63,5 +52,4 @@ function Home() {
   )
 }
 
-
-export default Home
+export default CorporateFilterResult

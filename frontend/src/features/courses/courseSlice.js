@@ -95,6 +95,42 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
 )
 
 
+  //search for courses
+  export const filterCourse = createAsyncThunk('courses/filterCourse', async (coursedata,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await courseService.filterCourse(coursedata,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+  //search for courses
+  export const guestFilterCourse = createAsyncThunk('courses/guestFilterCourse', async (coursedata,thunkAPI) => {
+    try {
+  
+       return await courseService.guestFilterCourse(coursedata)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+
+
 
 
   export const courseSlice = createSlice({
@@ -168,6 +204,32 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
             state.courses = action.payload
           })
           .addCase(guestGeneralSearchForCourse.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(filterCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(filterCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.courses = action.payload
+          })
+          .addCase(filterCourse.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(guestFilterCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(guestFilterCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.courses = action.payload
+          })
+          .addCase(guestFilterCourse.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

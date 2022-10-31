@@ -7,7 +7,7 @@ const {selectCountry,viewCourses,filterCourses,signup}=require('../controllers/g
 
 router.post('/selectCountry',selectCountry)
 router.get('/viewCourses',viewCourses)
-router.get('/filterCourses',filterCourses)
+router.post('/filterCourses',filterCourses)
 router.post('/searchForCourses',searchForCourses)
 router.get('/chooseCourseToView',chooseCourseToView)
 router.post('/signup',signup)
