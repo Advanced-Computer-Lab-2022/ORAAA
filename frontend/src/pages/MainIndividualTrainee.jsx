@@ -7,7 +7,7 @@ import { useSelector} from 'react-redux'
 import {useDispatch} from'react-redux'
 import {getCourses,reset } from '../features/courses/courseSlice'
 import CourseItem from '../components/CourseItem'
-
+import FilterForm from '../components/FilterForm'
 function MainIndividualTrainee() {
 
   
@@ -50,6 +50,8 @@ if (isLoading || cisLoading) {
           <ChooseCountryForm/>
         </section>
         <br></br>
+      <FilterForm/>
+      <br></br>
     <section className='content'>
         {courses.length > 0 ? (
           <div className='goals'>
