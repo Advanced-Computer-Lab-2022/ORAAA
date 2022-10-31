@@ -1,27 +1,19 @@
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
 import Spinner from '../components/Spinner'
-import {selectCountry} from '../features/instructor/instructorSlice'
 import { useSelector} from 'react-redux'
 import {useNavigate } from 'react-router-dom'
 import CourseItem from '../components/CourseItem'
-import { useState} from 'react'
 import {useDispatch} from'react-redux'
 import SearchBarForm from '../components/SearchBarForm'
 import { getCourses,reset } from '../features/courses/courseSlice'
+import ChooseCountryForm from '../components/ChooseCountryForm'
+
 function Instructor() {
 
 
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
-
-  
-  const [text, setValue]=useState({
-    country:'',
-  
-})
-const {country} = text
   
   const {isLoading,isError, message  } = useSelector(
     (state) => state.instructor
@@ -49,21 +41,7 @@ const {country} = text
     
     navigate('/InstructorCreateCourse')
   }
-  const onChange=(e) =>{
-    setValue((prevState)=>({
-      ...prevState,
-      [e.target.name]:e.target.value
-  
-    }))
-  }
-  const onSubmitt=(e)=>{
-      e.preventDefault()
 
-      const SelectCountry = {
-        country     
-      }
-      dispatch(selectCountry(SelectCountry))
-  }
   const onSubmittt=(e)=>{
     e.preventDefault()
     navigate('/ViewCourseTitles')
@@ -78,25 +56,9 @@ if (isLoading || cisLoading) {
 
   return (
     <>
-        
-     
-         <section className='form'>
-          <form onSubmit={onSubmitt}>
-           <div className="form-group">
-             <label htmlFor="text"></label>
-             <input type="text" 
-                 name='country' 
-                 id='country' 
-                 value={country}
-                 placeholder='Add country'
-                onChange={onChange}/>
-          </div>
-          <div className="form-group">
-            <button type='submit' className='btn btn-block'>
-              choose country
-            </button>
-          </div>
-           </form>
+
+        <section className='form'>
+          <ChooseCountryForm/>
         </section>
         <br></br>
       <section className='form'>

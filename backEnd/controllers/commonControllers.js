@@ -75,18 +75,17 @@ const selectCountry = asyncHandler(async(req,res)=>{
      const NindividualTrainee = await OindividualTrainee.findOne({_id})
     
     if(Ninstructor){
-        console.log(req.body)
-        console.log('hi')
+
         const updateCountry= await Oinstructor.findByIdAndUpdate(_id,req.body,{new:true})
         res.status(200).json(updateCountry)
 
     }else if(NcorporateTrainee){
-        console.log('hi')
+
         const updateCountry= await OcorporateTrainee.findByIdAndUpdate(_id,req.body,{new:true})
         res.status(200).json(updateCountry)
 
     }else if(NindividualTrainee){
-        console.log('hi')
+        
         const updateCountry= await OindividualTrainee.findByIdAndUpdate(_id,req.body,{new:true})
         res.status(200).json(updateCountry)
 

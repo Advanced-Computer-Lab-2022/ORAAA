@@ -3,7 +3,7 @@ import {useState} from 'react';
 //import { useDispatch } from 'react-redux'
 
 
-function CourseItem({ course }) {
+function CorporateCourseItem({ course }) {
   //const dispatch = useDispatch()
   const [isHovering, setIsHovering] = useState(false);
 
@@ -24,7 +24,7 @@ function CourseItem({ course }) {
          <h4>Title:{course.title}</h4>
          <h4>Rating:{course.rating}/10</h4>
          <h4>Course Duration:{course.totalHoursOfCourse}</h4>
-         <h4>Price:{course.price}</h4>
+         
          
          {isHovering && (
            <div>
@@ -39,4 +39,4 @@ function CourseItem({ course }) {
   )
 }
 
-export default CourseItem
+export default CorporateCourseItem

@@ -17,7 +17,7 @@ function SelectCountryForm() {
   return ( 
     <>
     <dev>
-    <h1></h1>
+  
   <Select options={options} value={value} onChange={changeHandler} />
   </dev>
     </>
