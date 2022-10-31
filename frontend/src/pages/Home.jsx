@@ -48,7 +48,7 @@ function Home() {
             ))}
           </div>
         ) : (
-          <h3>You have not set any goals</h3>
+          <h3>No courses Available</h3>
         )}
       </section>
       

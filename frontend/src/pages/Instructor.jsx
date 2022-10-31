@@ -7,6 +7,7 @@ import {useNavigate } from 'react-router-dom'
 import CourseItem from '../components/CourseItem'
 import { useState} from 'react'
 import {useDispatch} from'react-redux'
+import SearchBarForm from '../components/SearchBarForm'
 import { getCourses,reset } from '../features/courses/courseSlice'
 function Instructor() {
 
@@ -67,6 +68,7 @@ const {country} = text
     e.preventDefault()
     navigate('/ViewCourseTitles')
   }
+  
 
 
 if (isLoading || cisLoading) {
@@ -116,8 +118,9 @@ if (isLoading || cisLoading) {
           </div>
        </form>
     </section>
-    <br></br>
-
+     <br></br>
+     <SearchBarForm/>
+      <br></br>
     <section className='content'>
         {courses.length > 0 ? (
           <div className='goals'>

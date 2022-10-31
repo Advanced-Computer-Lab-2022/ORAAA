@@ -10,7 +10,6 @@ const initialState = {
 }
 
 
-
 //get all availble courses
 export const getCourses = createAsyncThunk('courses/getAll', async (_, thunkAPI) => {
       try {
@@ -45,9 +44,10 @@ export const getinstructerCoursesTitle = createAsyncThunk('courses/getinstructer
 )
 
   //search for courses
-  export const searchForCourse = createAsyncThunk('courses/search', async (coursedata, thunkAPI) => {
+  export const searchForCourse = createAsyncThunk('courses/search', async (coursedata,thunkAPI) => {
     try {
-       return await courseService.searchForCourse(coursedata)
+       const token =  thunkAPI.getState().auth.user.token
+       return await courseService.searchForCourse(coursedata,token)
     } catch (error) {
       const message =
         (error.response &&
@@ -58,6 +58,40 @@ export const getinstructerCoursesTitle = createAsyncThunk('courses/getinstructer
       return thunkAPI.rejectWithValue(message)
     }
   }
+)
+
+
+  //search for courses
+  export const generalSearchForCourse = createAsyncThunk('courses/generalsearch', async (coursedata,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await courseService.generalSearchForCourse(coursedata,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+//guest search for courses
+export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGeneralSearchForCourse', async (coursedata,thunkAPI) => {
+  try {
+     return await courseService.guestGeneralSearchForCourse(coursedata)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
 )
 
 
@@ -108,6 +142,32 @@ export const getinstructerCoursesTitle = createAsyncThunk('courses/getinstructer
             state.courses = action.payload
           })
           .addCase(searchForCourse.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(generalSearchForCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(generalSearchForCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.courses = action.payload
+          })
+          .addCase(generalSearchForCourse.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(guestGeneralSearchForCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(guestGeneralSearchForCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.courses = action.payload
+          })
+          .addCase(guestGeneralSearchForCourse.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

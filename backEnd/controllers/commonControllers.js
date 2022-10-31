@@ -175,7 +175,7 @@ const filterCourses = asyncHandler(async(req,res)=>{
 
 
 //@desc  search for availble courses
-//@route get /api/common/searchForCourses
+//@route post /api/common/searchForCourses
 //@access private
 const searchForCourses = asyncHandler(async(req,res)=>{
     const {keyword} = req.body

@@ -74,7 +74,7 @@ const filterCourses= asyncHandler(async(req,res)=>{
 //@access private
 const searchInstructorCourses= asyncHandler(async(req,res)=>{
     const {_id} = await Oinstructor.findById(req.user.id)
-    const Ccourses = await OCourse.find({$and:[{$or:[{'subject':req.body.subject} ,{'title':req.body.title}]},{'instructorId':_id}]} )
+    const Ccourses = await OCourse.find({$and:[{$or:[{'subject':req.body.keyword} ,{'title':req.body.keyword}]},{'instructorId':_id}]} )
     res.status(200).json(Ccourses)
     
 })

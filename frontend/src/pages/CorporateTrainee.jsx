@@ -1,8 +1,11 @@
-import React from 'react'
-
+import SearchBarForm from "../components/SearchBarForm"
 function CorporateTrainee() {
   return (
-    <div>corporateTrainee</div>
+    <>
+    <section className="heading">
+        <SearchBarForm/>
+     </section>
+    </>
   )
 }
 

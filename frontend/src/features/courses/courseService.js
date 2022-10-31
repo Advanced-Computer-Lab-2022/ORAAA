@@ -42,28 +42,42 @@ const getinstructerCoursesTitle = async (token) => {
 
 
   // search for courses
-  const searchForCourse = async (courseData) => {
-  var qs = require('qs');
-  var data = qs.stringify({
-    'keyword': `${courseData}`  
-  });
-  var config = {
-    method: 'get',
-    url: 'http://localhost:4000/api/searchForCourses',
-    headers: { 
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    data : data
-  };
+  const searchForCourse = async (courseData,token) => {
+     const config={
+       headers:{
+          Authorization: `Bearer ${token}`
+      },
+    }
+     
+    const response = await axios.post(API_URL+'instructor/searchInstructorCourses',courseData,config)
   
-  axios(config)
-  .then(function (response) {
+    return response.data
+  
+}
+
+
+  // generalSearchForCourse for courses
+  const generalSearchForCourse = async (courseData,token) => {
+    const config={
+      headers:{
+         Authorization: `Bearer ${token}`
+     },
+   }
     
-    window.localStorage.setItem('courses',JSON.stringify(response.data));
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+   const response = await axios.post(API_URL+'common/searchForCourses',courseData,config)
+ 
+   return response.data
+ 
+}
+
+
+
+// guestGeneralSearchForCourse for courses
+const guestGeneralSearchForCourse = async (courseData) => {
+ 
+ const response = await axios.post(API_URL+'searchForCourses',courseData)
+
+ return response.data
 
 }
   
@@ -79,7 +93,9 @@ const getinstructerCoursesTitle = async (token) => {
   const CourseService = {
     getCourses,
     searchForCourse,
-    getinstructerCoursesTitle
+    getinstructerCoursesTitle,
+    generalSearchForCourse,
+    guestGeneralSearchForCourse
     
   }
   
