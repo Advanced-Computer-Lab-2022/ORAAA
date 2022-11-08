@@ -6,7 +6,7 @@ import {useNavigate } from 'react-router-dom'
 import CourseItem from '../components/CourseItem'
 import {useDispatch} from'react-redux'
 import SearchBarForm from '../components/SearchBarForm'
-import { getCourses,reset } from '../features/courses/courseSlice'
+import { getCourses,reset} from '../features/courses/courseSlice'
 import ChooseCountryForm from '../components/ChooseCountryForm'
 import FilterForm from '../components/FilterForm'
 

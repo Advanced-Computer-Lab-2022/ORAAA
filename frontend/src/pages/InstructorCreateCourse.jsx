@@ -123,7 +123,7 @@ function InstructorCreateCourse() {
         
           <div className="form-group">
             <button type='submit' className='btn btn-block'>
-              Create User
+              Create Course
             </button>
           </div>
         </form>

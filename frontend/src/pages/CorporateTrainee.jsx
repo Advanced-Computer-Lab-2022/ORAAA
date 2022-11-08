@@ -6,7 +6,7 @@ import Spinner from '../components/Spinner'
 import { useSelector} from 'react-redux'
 import {useDispatch} from'react-redux'
 import {getCourses,reset } from '../features/courses/courseSlice'
-import CorporateCourseItem from '../components/CorporateCourseItem'
+import CourseItem from '../components/CourseItem'
 import FilterForm from '../components/FilterForm'
 
 
@@ -59,7 +59,7 @@ if (isLoading || cisLoading) {
         {courses.length > 0 ? (
           <div className='goals'>
             {courses.map((course) => (
-              <CorporateCourseItem key={course._id} course={course} />
+              <CourseItem key={course._id} course={course} />
             ))}
           </div>
         ) : (

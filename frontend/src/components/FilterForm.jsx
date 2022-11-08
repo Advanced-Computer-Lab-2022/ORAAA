@@ -1,10 +1,10 @@
-import {useDispatch} from'react-redux'
+import {useDispatch,useSelector} from'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { filterCourse,guestFilterCourse} from '../features/courses/courseSlice'
 import { useState} from 'react'
 
 function FilterForm() {
-
+    const {user,userType} = useSelector((state) => state.auth)
     const [text, setValue]=useState({
         price:'',
         subject:'',
@@ -15,21 +15,6 @@ function FilterForm() {
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    
-
-    const [check, setCheck] = useState(false);
-
-     const u =  JSON.parse(window.localStorage.getItem('user'));
-     const type = () =>{
-        if(!u){
-           setCheck(true);
-        }else if(u.typee==="corporateTrainee"){
-         setCheck(false);
-       }else{
-         setCheck(true);
-       }
- 
-}
 
 
     const onChange=(e) =>{
@@ -48,26 +33,20 @@ function FilterForm() {
           subject,
           rating
         }
-        if(u){
-        dispatch(filterCourse(courseData))
+        if(user){
+            dispatch(filterCourse(courseData))
         }else{
             dispatch(guestFilterCourse(courseData))
         }
 
-        if(!u){
-            navigate('/searchresults')
-        }else if(u.typee==="corporateTrainee"){
-            navigate('/CorporateFilterResult')
-        }else{
-          navigate('/searchresults')
-        }
+         navigate('/searchresults')
         
       }
   return (
  <>
-    <section className='form' onMouseMove={type}>
+    <section className='form'>
        <form onSubmit={onSubmit}>
-        {(check && 
+        {userType!=='corporateTrainee' && 
          <div className="form-group">
           <label htmlFor="text"></label>
            <input type="text" 
@@ -77,7 +56,7 @@ function FilterForm() {
             placeholder='Enter Price'
             onChange={onChange}/>
           </div>
-          )}
+          }
           <div className="form-group">
           <label htmlFor="text"></label>
            <input type="text" 

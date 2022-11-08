@@ -51,7 +51,7 @@ const viewCourses = asyncHandler(async(req,res)=>{
 //@access private
 const filterCourses = asyncHandler(async(req,res)=>{
     
-    
+    let Ccourses
     const {subject,rating,price} = req.body
     if(!subject && !rating && !price){
         res.status(400)
@@ -59,22 +59,29 @@ const filterCourses = asyncHandler(async(req,res)=>{
     }
 
     if((!subject && rating && !price) || (subject && !rating && !price) || (!subject && !rating && price)){
-        const Ccourses = await Ocourse.find({$or:[{'subject':req.body.subject} ,{'rating':req.body.rating},{'price':req.body.price}]} )
+         Ccourses = await Ocourse.find({$or:[{'subject':req.body.subject} ,{'rating':req.body.rating},{'price':req.body.price}]} )
         res.status(200).json(Ccourses)
 
     }else if(!subject && rating && price){
-        const Ccourses = await Ocourse.find({$and:[{'rating':req.body.rating},{'price':req.body.price}]} )
+         Ccourses = await Ocourse.find({$and:[{'rating':req.body.rating},{'price':req.body.price}]} )
         res.status(200).json(Ccourses)
     }else if(subject && rating && !price){
-        const Ccourses = await Ocourse.find({$and:[{'subject':req.body.subject} ,{'rating':req.body.rating}]})
+         Ccourses = await Ocourse.find({$and:[{'subject':req.body.subject} ,{'rating':req.body.rating}]})
         res.status(200).json(Ccourses)
     }else if(subject && !rating && price){
-        const Ccourses = await Ocourse.find({$and:[{'subject':req.body.subject} ,{'price':req.body.price}]} )
+         Ccourses = await Ocourse.find({$and:[{'subject':req.body.subject} ,{'price':req.body.price}]} )
         res.status(200).json(Ccourses)
     }else{
-        const Ccourses = await Ocourse.find({$and:[{'subject':req.body.subject} ,{'rating':req.body.rating},{'price':req.body.price}]} )
-        res.status(200).json(Ccourses)
+         Ccourses = await Ocourse.find({$and:[{'subject':req.body.subject} ,{'rating':req.body.rating},{'price':req.body.price}]} )
+         if(Ccourses.length===0){
+            res.status(404)
+            throw new Error('Their is no Course with these properties')
+        }else{
+            res.status(200).json(Ccourses)
+        }
+        
     }
+ 
 
 
 })

@@ -1,38 +1,23 @@
 import { useState} from 'react'
-import {useDispatch } from 'react-redux'
+import {useDispatch,useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {  searchForCourse,generalSearchForCourse,guestGeneralSearchForCourse} from '../features/courses/courseSlice'
 
 
 
 function SearchBarForm() {
+  const {user,userType} = useSelector((state) => state.auth)
   const [text, setValue]=useState({
     keyword:'',
   
-})
+   })
 
-const [userType,setUserType]=useState();
+  const [userTypee,setUserType]=useState('any');
 
   const {keyword} = text
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const [check, setCheck] = useState(false);
-
-  const u =  JSON.parse(window.localStorage.getItem('user'));
-
-const type = () =>{
-  if(u.typee==="instructor"){
-    setCheck(true);
-  }else{
-    setCheck(false);
-  }
- 
-}
-
-
- 
-  
 
   const onChange=(e) =>{
     setValue((prevState)=>({
@@ -48,24 +33,27 @@ const type = () =>{
     const courseData = {
       keyword
     }
-    if(userType==='Instructor'){
-    dispatch(searchForCourse(courseData))
-    navigate('/searchresults')
-    }else if(u){
+
+    if(userTypee==='Instructor'){
+       dispatch(searchForCourse(courseData))
+    
+    }else if(user){
       
       dispatch(generalSearchForCourse(courseData))
-       navigate('/searchresults')
+       
 
     }else{
       dispatch(guestGeneralSearchForCourse(courseData))
-       navigate('/searchresults')
+       
     }
+
+    navigate('/searchresults')
   }
 
-
+   
   
     return (
-      <section className='form' onMouseMove={type}>
+      <section className='form'>
       <form onSubmit={onSubmit}>
        <div className="form-group">
          <label htmlFor="text"></label>
@@ -81,9 +69,9 @@ const type = () =>{
           Search
         </button>
       </div>
-      {(check &&
+      {(userType==='instructor' &&
           <div>
-            <h1>{userType}</h1>
+            <h1>{userTypee}</h1>
              <input type="radio" name="searchType" value="Instructor" onChange={e=>setUserType(e.target.value)} /> My courses
              <input type="radio" name="searchType" value="any" onChange={e=>setUserType(e.target.value)} /> All courses
           </div>

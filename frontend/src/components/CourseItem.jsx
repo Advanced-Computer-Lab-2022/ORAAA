@@ -1,10 +1,10 @@
 import {useState} from 'react';
-
-//import { useDispatch } from 'react-redux'
-
+import {useSelector} from 'react-redux'
 
 function CourseItem({ course }) {
-  //const dispatch = useDispatch()
+  
+
+  const {userType} = useSelector((state) => state.auth)
   const [isHovering, setIsHovering] = useState(false);
 
 
@@ -24,8 +24,9 @@ function CourseItem({ course }) {
          <h4>Title:{course.title}</h4>
          <h4>Rating:{course.rating}/10</h4>
          <h4>Course Duration:{course.totalHoursOfCourse}</h4>
-         <h4>Price:{course.price}</h4>
-         
+         {userType!=='corporateTrainee' && 
+          <h4>Price:{course.price}</h4>
+         } 
          {isHovering && (
            <div>
              <h4>Subject:{course.subject}</h4>

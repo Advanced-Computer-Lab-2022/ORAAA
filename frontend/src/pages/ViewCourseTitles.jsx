@@ -1,10 +1,7 @@
-import SearchBarForm from '../components/SearchBarForm'
 import { useEffect } from 'react'
-//import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import CourseTitle from '../components/CourseTitle'
 import Spinner from '../components/Spinner'
-import SelectCountryForm from '../components/SelectCountryForm'
 import { getinstructerCoursesTitle, reset} from '../features/courses/courseSlice'
 
 function ViewCourseTitles() {
@@ -46,7 +43,7 @@ function ViewCourseTitles() {
                 ))}
               </div>
             ) : (
-              <h3>You have not set any goals</h3>
+              <h3>No courses</h3>
             )}
           </section>
           

@@ -43,7 +43,7 @@ export const getinstructerCoursesTitle = createAsyncThunk('courses/getinstructer
 }
 )
 
-  //search for courses
+  //Instructor search for his courses
   export const searchForCourse = createAsyncThunk('courses/search', async (coursedata,thunkAPI) => {
     try {
        const token =  thunkAPI.getState().auth.user.token
@@ -61,7 +61,7 @@ export const getinstructerCoursesTitle = createAsyncThunk('courses/getinstructer
 )
 
 
-  //search for courses
+  //general search for courses
   export const generalSearchForCourse = createAsyncThunk('courses/generalsearch', async (coursedata,thunkAPI) => {
     try {
        const token =  thunkAPI.getState().auth.user.token
@@ -95,7 +95,7 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
 )
 
 
-  //search for courses
+  //filter courses
   export const filterCourse = createAsyncThunk('courses/filterCourse', async (coursedata,thunkAPI) => {
     try {
        const token =  thunkAPI.getState().auth.user.token
@@ -112,7 +112,7 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
   }
 )
 
-  //search for courses
+  //guestfilter courses
   export const guestFilterCourse = createAsyncThunk('courses/guestFilterCourse', async (coursedata,thunkAPI) => {
     try {
   

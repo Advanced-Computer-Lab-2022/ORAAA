@@ -140,7 +140,12 @@ const filterCourses = asyncHandler(async(req,res)=>{
         res.status(200).json(Ccourses)
     }else{
         const Ccourses = await Ocourse.find({$and:[{'subject':req.body.subject} ,{'rating':req.body.rating}]} )
-        res.status(200).json(Ccourses)
+        if(Ccourses.length===0){
+            res.status(404)
+            throw new Error('Their is no Course with these properties')
+        }else{
+            res.status(200).json(Ccourses)
+        }
     }
 }else{
     const {subject,rating,price} = req.body
@@ -164,7 +169,12 @@ const filterCourses = asyncHandler(async(req,res)=>{
         res.status(200).json(Ccourses)
     }else{
         const Ccourses = await Ocourse.find({$and:[{'subject':req.body.subject} ,{'rating':req.body.rating},{'price':req.body.price}]} )
-        res.status(200).json(Ccourses)
+        if(Ccourses.length===0){
+            res.status(404)
+            throw new Error('Their is no Course with these properties')
+        }else{
+            res.status(200).json(Ccourses)
+        }
     }
 
 
@@ -190,8 +200,10 @@ const searchForCourses = asyncHandler(async(req,res)=>{
    
     if(Ccourses.length===0){
     const Ninstructor = await Oinstructor.findOne({'userName':keyword})
+       if(Ninstructor){
         _id =Ninstructor._id
         Ccourses = await Ocourse.find({'instructorId':_id})
+       }
     }
     
     
