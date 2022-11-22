@@ -1,4 +1,3 @@
-import SearchBarForm from '../components/SearchBarForm'
 import { useEffect } from 'react'
 //import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -38,9 +37,6 @@ function Home() {
   return (
     <>
     <section><SelectCountryForm/></section>
-      <section className='heading'>
-      <SearchBarForm/>
-      </section>
       <br></br>
       <FilterForm/>
       <br></br>

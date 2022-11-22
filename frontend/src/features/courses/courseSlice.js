@@ -129,6 +129,23 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
   }
 )
 
+  //Instructor filter his courses
+  export const InsFilterCourse = createAsyncThunk('courses/InsFilterCourse', async (coursedata,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await courseService.InsFilterCourse(coursedata,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 
 
 
@@ -230,6 +247,19 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
             state.courses = action.payload
           })
           .addCase(guestFilterCourse.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(InsFilterCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(InsFilterCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.courses = action.payload
+          })
+          .addCase(InsFilterCourse.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload

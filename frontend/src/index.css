@@ -7,13 +7,82 @@
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
   height: 100vh;
+  background: #09090a;
+  font-family: 'Poppins', sans-serif;
+  
+  }
+  .radio{
+    color:#f4f4f4
+  }
+  
+
+.searchBar{
+  transform: translate(-10%,0%);
+  transition: all 1s;
+  width: 50px;
+  height: 50px;
+  background: white;
+  box-sizing: border-box;
+  border-radius: 25px;
+  border: 4px solid white;
+  padding: 5px;
+  
 }
+
+.searchBar input{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;;
+  height: 42.5px;
+  line-height: 30px;
+  outline: 0;
+  border: 0;
+  display: none;
+  font-size: 1em;
+  border-radius: 20px;
+  padding: 0 20px;
+}
+
+.fa{
+  padding: 10px;
+  width: 42.5px;
+  height: 42.5px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 50%;
+  color: #050505;
+  text-align: center;
+  font-size: 1.2em;
+  transition: all 1s;
+}
+
+.searchBar:hover,
+.searchBar:valid{
+  width: 200px;
+  cursor: pointer;
+}
+
+form:hover input,
+form:valid input{
+  display: block;
+}
+
+form:hover .fa,
+form:valid .fa{
+  background: #080809;
+  color: rgb(254, 250, 250);
+}
+
+
+
+
 
 a {
   text-decoration: none;
-  color: #000;
+  color: rgb(241, 234, 234);
 }
 
 p {
@@ -33,7 +102,9 @@ h2,
 h3 {
   font-weight: 600;
   margin-bottom: 10px;
+  color:#fff
 }
+
 
 .container {
   width: 100%;
@@ -67,8 +138,9 @@ h3 {
   align-items: center;
 }
 
+
 .header ul li a:hover {
-  color: #777;
+  color: rgb(132, 130, 130);
 }
 
 .header ul li a svg {
@@ -139,8 +211,8 @@ h3 {
   padding: 10px 20px;
   border: 1px solid #000;
   border-radius: 5px;
-  background: #000;
-  color: #fff;
+  background: rgb(241, 239, 239);
+  color: rgb(7, 7, 7);
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;

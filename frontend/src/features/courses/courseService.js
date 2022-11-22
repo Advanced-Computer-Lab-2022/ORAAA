@@ -72,7 +72,7 @@ const guestGeneralSearchForCourse = async (courseData) => {
 
 
 
-  // generalSearchForCourse for courses
+  // generalfilter courses
   const filterCourse = async (courseData,token) => {
     const config={
       headers:{
@@ -96,6 +96,21 @@ const guestGeneralSearchForCourse = async (courseData) => {
    return response.data
  
 }
+
+
+  // generalfilter courses
+  const InsFilterCourse = async (courseData,token) => {
+    const config={
+      headers:{
+         Authorization: `Bearer ${token}`
+     },
+   }
+    
+   const response = await axios.post(API_URL+'instructor/filterCourses',courseData,config)
+ 
+   return response.data
+ 
+}
   
 
   
@@ -113,7 +128,8 @@ const guestGeneralSearchForCourse = async (courseData) => {
     generalSearchForCourse,
     guestGeneralSearchForCourse,
     filterCourse,
-    guestFilterCourse
+    guestFilterCourse,
+    InsFilterCourse
     
   }
   

@@ -4,6 +4,7 @@ import instructorService from './instructorService'
 const initialState = {
     InstructorCreatedCourses:[],
     InstructorSelectedCountry:'',
+    InstructorSearchMode:'Any',
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -48,6 +49,7 @@ const initialState = {
     initialState,
     reducers: {
       reset: (state) => initialState,
+      insMode:(state)=> {state.InstructorSearchMode='Instructor'}
     },
     extraReducers: (builder) => {
         builder
@@ -90,5 +92,5 @@ const initialState = {
 
 
 
-  export const { reset } = instructorSlice.actions
+  export const { reset,insMode } = instructorSlice.actions
   export default instructorSlice.reducer

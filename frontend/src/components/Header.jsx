@@ -2,6 +2,7 @@ import { FaSignInAlt, FaSignOutAlt, FaUser } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from '../features/auth/authSlice'
+import SearchBarForm from '../components/SearchBarForm'
 
 function Header() {
   const navigate = useNavigate()
@@ -20,6 +21,7 @@ function Header() {
         <Link to='/'>ORAAA</Link>
       </div>
       <ul>
+        <li><SearchBarForm/></li>
         {user ? (
           <li>
             <button className='btn' onClick={onLogout}>

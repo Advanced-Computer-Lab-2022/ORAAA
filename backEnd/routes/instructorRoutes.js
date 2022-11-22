@@ -5,7 +5,7 @@ const { createCourse, getCourseTitles,filterCourses,searchInstructorCourses}=req
 const {protect} = require('../middleWare/authMiddleware')
 router.post('/createCourse',protect,createCourse)
 router.get('/getCourseTitle',protect,getCourseTitles)
-router.get('/filterCourses',protect,filterCourses)
+router.post('/filterCourses',protect,filterCourses)
 router.post('/searchInstructorCourses',protect,searchInstructorCourses)
 
 

@@ -1,18 +1,19 @@
 import { useState} from 'react'
 import {useDispatch,useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import {  searchForCourse,generalSearchForCourse,guestGeneralSearchForCourse} from '../features/courses/courseSlice'
-
+import {searchForCourse,generalSearchForCourse,guestGeneralSearchForCourse} from '../features/courses/courseSlice'
+import {reset} from '../features/instructor/instructorSlice'
 
 
 function SearchBarForm() {
-  const {user,userType} = useSelector((state) => state.auth)
+  const {user} = useSelector((state) => state.auth)
+  const {InstructorSearchMode} = useSelector((state) => state.instructor)
   const [text, setValue]=useState({
     keyword:'',
   
    })
 
-  const [userTypee,setUserType]=useState('any');
+
 
   const {keyword} = text
   const navigate = useNavigate()
@@ -34,7 +35,7 @@ function SearchBarForm() {
       keyword
     }
 
-    if(userTypee==='Instructor'){
+    if(InstructorSearchMode==='Instructor'){
        dispatch(searchForCourse(courseData))
     
     }else if(user){
@@ -46,42 +47,34 @@ function SearchBarForm() {
       dispatch(guestGeneralSearchForCourse(courseData))
        
     }
-
+    dispatch(reset())
     navigate('/searchresults')
   }
 
    
   
     return (
-      <section className='form'>
-      <form onSubmit={onSubmit}>
-       <div className="form-group">
-         <label htmlFor="text"></label>
-         <input type="text" 
-             name='keyword' 
-             id='keyword' 
-             value={keyword}
-             placeholder='SearchBar'
-            onChange={onChange}/>
-      </div>
-      <div className="form-group">
-        <button type='submit' className='btn btn-block'>
-          Search
-        </button>
-      </div>
-      {(userType==='instructor' &&
-          <div>
-            <h1>{userTypee}</h1>
-             <input type="radio" name="searchType" value="Instructor" onChange={e=>setUserType(e.target.value)} /> My courses
-             <input type="radio" name="searchType" value="any" onChange={e=>setUserType(e.target.value)} /> All courses
-          </div>
-          )}
-       </form>
-    </section>
+      <>
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous"/>
+      
+       <form className='searchBar' onSubmit={onSubmit}>
+        <input type="text" 
+            name='keyword' 
+            id='keyword' 
+            value={keyword}
+            placeholder='SearchBar'
+            onChange={onChange} required/>
+         <button  type='submit' class="fa fa-search"/>
+        
+        </form>
+     </>
 
       )
 
 }
+
+
+
 
 
 export default SearchBarForm

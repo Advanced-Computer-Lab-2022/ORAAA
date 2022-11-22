@@ -1,4 +1,3 @@
-import SearchBarForm from '../components/SearchBarForm'
 import ChooseCountryForm from '../components/ChooseCountryForm'
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
@@ -45,10 +44,6 @@ if (isLoading || cisLoading) {
 
   return (
     <>
-     <section className="heading">
-        <SearchBarForm/>
-     </section>
-      <br></br>
       <section className='form'>
           <ChooseCountryForm/>
         </section>

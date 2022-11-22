@@ -56,7 +56,7 @@ function AdminForm() {
                  placeholder='Add password'
                 onChange={onChange}/>
          </div>
-         <div>
+         <div className='radio'>
             <h1>{userType}</h1>
              <input type="radio" name="userType" value="Admin" onChange={e=>setUserType(e.target.value)} /> Admin
              <input type="radio" name="userType" value="Instructor" onChange={e=>setUserType(e.target.value)} /> Instructor

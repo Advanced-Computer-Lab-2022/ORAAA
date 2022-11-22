@@ -4,6 +4,7 @@ import CourseItem from '../components/CourseItem'
 import Spinner from '../components/Spinner'
 import { toast } from 'react-toastify'
 
+
 function SearchResults() {
   const dispatch = useDispatch()
   const { courses, isError, message } = useSelector(
@@ -19,9 +20,6 @@ function SearchResults() {
         
       
 
-     // return () => {
-       // dispatch(reset())
-     // }
     }, [isError, message, dispatch])
   
   

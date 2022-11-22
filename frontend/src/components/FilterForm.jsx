@@ -1,10 +1,13 @@
 import {useDispatch,useSelector} from'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { filterCourse,guestFilterCourse} from '../features/courses/courseSlice'
+import { filterCourse,guestFilterCourse,InsFilterCourse} from '../features/courses/courseSlice'
 import { useState} from 'react'
+import {reset} from '../features/instructor/instructorSlice'
 
 function FilterForm() {
     const {user,userType} = useSelector((state) => state.auth)
+    const {InstructorSearchMode} = useSelector((state) => state.instructor)
+
     const [text, setValue]=useState({
         price:'',
         subject:'',
@@ -33,12 +36,16 @@ function FilterForm() {
           subject,
           rating
         }
-        if(user){
+        if(InstructorSearchMode==='Instructor'){
+          dispatch(InsFilterCourse(courseData))
+       
+       }else if(user){
             dispatch(filterCourse(courseData))
         }else{
             dispatch(guestFilterCourse(courseData))
         }
-
+          
+         dispatch(reset())
          navigate('/searchresults')
         
       }
