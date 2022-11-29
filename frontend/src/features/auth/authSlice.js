@@ -8,6 +8,7 @@ const user = JSON.parse(localStorage.getItem('user'))
 const initialState = {
   user: user ? user : null,
   userType: user ? user.typee : null,
+  changePasswordSuccsses:'',
   isError: false,
   isSuccess: false,
   isLoading: false,
@@ -39,6 +40,24 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
     return thunkAPI.rejectWithValue(message)
   }
 })
+
+
+ //Change password
+ export const changePassword = createAsyncThunk('common/changePassword', async (data, thunkAPI) => {
+  try {
+    const token =  thunkAPI.getState().auth.user.token
+     return await authService.changePassword(data,token)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
+)
 
 export const logout = createAsyncThunk('auth/logout', async () => {
   await authService.logout()
@@ -87,10 +106,25 @@ export const authSlice = createSlice({
         state.message = action.payload
         state.user = null
       })
+      .addCase(changePassword.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.changePasswordSuccsses = action.payload
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+        state.user = null
+      })
       .addCase(logout.fulfilled, (state) => {
         state.user = null
         state.userType= null
       })
+      
   },
 })
 

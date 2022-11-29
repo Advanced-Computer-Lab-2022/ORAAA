@@ -6,6 +6,11 @@ const courseSchema= mongoose.Schema({
         required:true,
         ref:'instructor'
     },
+    counter:{
+        type:Number,
+        
+
+    },
     title: {
         type:String,
         required:[true,'please enter title'],
@@ -25,16 +30,6 @@ const courseSchema= mongoose.Schema({
         required:[true,'please enter a short Summery'],
 
     }, 
-    subTitle:{
-        type: String,
-        required:[true,'please enter the course subtitle'],
-
-    },
-    totalHoursOfEachSubtitle:{
-        type: String,
-        required:[false],
-        
-    },
     subject:{
         type:String,
         required:[true,'please enter the course subject']
@@ -43,6 +38,16 @@ const courseSchema= mongoose.Schema({
         type:Number,
         max:10,
         min:1
+    },
+    rateArray:{
+        type:[],
+    },
+    review:{
+        type:[],
+    },
+    previewLink:{
+        type:String,
+        required:[true]
     }
 
 

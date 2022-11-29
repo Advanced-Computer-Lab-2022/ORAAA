@@ -235,6 +235,127 @@ const chooseCourseToView = asyncHandler(async(req,res)=>{
 })
 
 
+//@desc  rating a course
+//@route get /api/common/rateCourse
+//@access private
+const rateCourses = async(req,res) => {
+ 
+ 
+    const courseId = req.query.courseId;
+
+    // check if userId is not empty
+    if(courseId){
+     var avg  =0
+     const arr= await Ocourse.findById(courseId)
+     arr.rateArray.push(req.body.rating)
+    for(var i=0;i<arr.rateArray.length;i++){
+        avg=avg+Number(arr.rateArray[i])
+    }    
+    avg=avg/arr.rateArray.length
+    arr.rating=Math.floor(avg)
+    if(req.body.review && req.body.review!==""){
+        arr.review.push(req.body.review)
+        }
+    const Ncourse = await Ocourse.findByIdAndUpdate(courseId,arr,{new:true});
+    
+    if(Ncourse){ 
+        
+    res.status(200).json(Ncourse.rating)
+    }else{
+        res.status(404)
+        throw new Error('course not found')
+    }
+    }
+}
+
+
+//@desc  rating an instructor
+//@route get /api/common/rateInstructor
+//@access private
+const rateInstructor = async(req,res) => {
+ 
+ 
+    const instructorId = req.query.instructorId;
+
+
+    // check if userId is not empty
+    if(instructorId){
+     var avg  =0
+     const arr= await Oinstructor.findById(instructorId)
+     arr.rateArray.push(req.body.rating)
+    for(var i=0;i<arr.rateArray.length;i++){
+        avg=avg+Number(arr.rateArray[i])
+    }    
+    avg=avg/arr.rateArray.length
+    arr.rate=Math.floor(avg)
+    
+    if(req.body.review && req.body.review!==""){
+    arr.review.push(req.body.review)
+    }
+    const Ninstructor = await Oinstructor.findByIdAndUpdate(instructorId,arr,{new:true});
+    
+    if(Ninstructor){ 
+        
+    res.status(200).json('hi')
+    }else{
+        res.status(404)
+        throw new Error('could not rate instructor')
+    }
+    }
+}
+
+// @desc    user changes his password
+// @route   PUT /api/common/changePassword
+// @access  Private
+const changePassword = asyncHandler(async (req, res) => {
+    const {oldPassword,newPassword} = req.body
+  
+    if (!oldPassword || !newPassword) {
+      res.status(400)
+      throw new Error('Please fill all the required fields')
+    }
+
+   const _id=req.user.id
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(newPassword, salt)
+
+
+   if(_id){
+    var Ninstructor = await Oinstructor.findOne({_id})
+    var NcorporateTrainee = await OcorporateTrainee.findOne({_id})
+    var NindividualTrainee = await OindividualTrainee.findOne({_id})
+   
+      
+    if(Ninstructor && (await bcrypt.compare(oldPassword,Ninstructor.password))){
+        const replace = await Oinstructor.findById(_id)
+        replace.password=hashedPassword
+        Ninstructor= await Oinstructor.findByIdAndUpdate(_id,replace,{new:true})
+        res.status(200).json(Ninstructor.password)
+       
+    }else if(NcorporateTrainee && (await bcrypt.compare(oldPassword,NcorporateTrainee.password))){
+        const replace = await OcorporateTrainee.findById(_id)
+        replace.password=hashedPassword
+        NcorporateTrainee= await OcorporateTrainee.findByIdAndUpdate(_id,replace,{new:true})
+        res.status(200).json(NcorporateTrainee.password)
+
+
+    }else if(NindividualTrainee && (await bcrypt.compare(oldPassword,NindividualTrainee.password))){
+        const replace = await OindividualTrainee.findById(_id)
+        replace.password=hashedPassword
+        NindividualTrainee= await OindividualTrainee.findByIdAndUpdate(_id,replace,{new:true})
+        res.status(200).json(NindividualTrainee.password)
+
+
+    }else{
+        res.status(400)
+        throw new Error('Invalid Password')
+    }
+
+}
+  })
+
 
 
 
@@ -254,6 +375,9 @@ module.exports={
     viewCourses,
     filterCourses,
     searchForCourses,
-    chooseCourseToView
+    chooseCourseToView,
+    rateCourses,
+    rateInstructor,
+    changePassword
 
 }

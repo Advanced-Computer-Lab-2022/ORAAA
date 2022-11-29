@@ -1,13 +1,46 @@
 import {useState} from 'react';
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
+import { toast } from 'react-toastify'
+import {RateCourse,getCourses,reset} from '../features/courses/courseSlice'
+import Spinner from '../components/Spinner'
+import { useEffect } from 'react'
 
 function CourseItem({ course }) {
   
-
+  const dispatch = useDispatch()
   const {userType} = useSelector((state) => state.auth)
-  const [isHovering, setIsHovering] = useState(false);
+  const [isHovering, setIsHovering] = useState(false)
+  
+  const [text, setValue]=useState({
+    rating:'',
+  
+})
+
+  const {rating} = text
+  const {isLoading,isError, message ,lastRate } = useSelector(
+    (state) => state.courses
+  )
 
 
+ 
+  useEffect(() => {
+    
+    if (isError) {
+      toast.error(message)
+    }
+
+    
+
+},[isError,message])
+
+
+  const onChange=(e) =>{
+    setValue((prevState)=>({
+      ...prevState,
+      [e.target.name]:e.target.value
+  
+    }))
+  }
 
   const handleMouseOver = () => {
     setIsHovering(true);
@@ -16,6 +49,36 @@ function CourseItem({ course }) {
   const handleMouseOut = () => {
     setIsHovering(false);
   };
+
+  const onClick = (e) => {
+
+    e.preventDefault()
+     
+    
+    console.log(course._id)
+   
+    
+    
+    const info = {
+      rating,
+      courseId:course._id    
+    }
+
+   dispatch(RateCourse(info))
+ 
+   
+
+  }
+
+  if (isLoading) {
+    return <Spinner />
+  }
+  
+  if(lastRate!==''){
+    dispatch(reset())
+    dispatch(getCourses())
+   }
+
 
   return (
     <div onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
@@ -30,11 +93,25 @@ function CourseItem({ course }) {
          {isHovering && (
            <div>
              <h4>Subject:{course.subject}</h4>
-             <h4>SubTitle:{course.subTitle}</h4>
-             <h4>SubTitle Duration:{course.totalHoursOfEachSubtitle}</h4>
              <h4>ShortSummery:{course.shortSummery}</h4>
            </div>
          )}
+       <form>
+           <div className="form-group">
+             <label htmlFor="text"></label>
+             <input type="text" 
+                 name='rating' 
+                 id='rating' 
+                 value={rating}
+                 placeholder='Rate the course 1 --> 10'
+                onChange={onChange}/>
+          </div>
+          <div className="form-group">
+            <button type='submit' className='btn btn-block' onClick={onClick} key={course._id}>
+              Rate course
+            </button>
+          </div>
+       </form>
       </div>
     </div>
   )

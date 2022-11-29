@@ -111,6 +111,21 @@ const guestGeneralSearchForCourse = async (courseData) => {
    return response.data
  
 }
+
+
+ // generalfilter courses
+ const RateCourse = async (courseData,courseId,token) => {
+  const config={
+    headers:{
+       Authorization: `Bearer ${token}`
+   },
+ }
+
+ const response = await axios.put(`/api/common/rateCourses?courseId=${courseId}`,courseData,config)
+ 
+ return response.data
+
+}
   
 
   
@@ -129,7 +144,8 @@ const guestGeneralSearchForCourse = async (courseData) => {
     guestGeneralSearchForCourse,
     filterCourse,
     guestFilterCourse,
-    InsFilterCourse
+    InsFilterCourse,
+    RateCourse
     
   }
   

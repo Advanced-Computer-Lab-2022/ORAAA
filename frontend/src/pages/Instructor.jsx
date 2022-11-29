@@ -22,7 +22,10 @@ function Instructor() {
   const {courses,cisLoading,cisError, cmessage  } = useSelector(
     (state) => state.courses
   )
+
+ 
   useEffect(() => {
+    
     if (isError) {
       toast.error(message)
     }
@@ -46,6 +49,11 @@ function Instructor() {
   const onSubmittt=(e)=>{
     e.preventDefault()
     navigate('/ViewCourseTitles')
+  }
+
+  const onClick=(e)=>{
+    e.preventDefault()
+    navigate('/ChangePasswordPage')
   }
   
 
@@ -81,6 +89,11 @@ if (isLoading || cisLoading) {
            </button>
           </div>
        </form>
+       <div className="form-group">
+              <button type='submit' className='btn btn-block' onClick={onClick}>
+                 Change password
+              </button>
+      </div>
     </section>
       <br></br>
       <FilterForm/>

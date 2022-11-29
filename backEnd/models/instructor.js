@@ -1,3 +1,4 @@
+const { default: _default } = require('concurrently')
 const mongoose = require('mongoose')
 const instructorSchema= mongoose.Schema({
     userName: {
@@ -12,13 +13,14 @@ const instructorSchema= mongoose.Schema({
     },
     email:{
         type: String,
-        unique:[true]
-        //required:[true,'please enter your email address'],
+        unique:[true],
+        default:''
 
     },
     miniBiography:{
         type: String,
-        //required:[true,'please enter a short Summery'],
+        default:''
+        
 
     },
     rate:{
@@ -26,7 +28,11 @@ const instructorSchema= mongoose.Schema({
         min:0,
         max:10
 
-    },reviews:{
+    },
+    rateArray:{
+        type:[]
+    }
+    ,reviews:{
         type:Number,
         min:0,
         max:10
@@ -40,6 +46,9 @@ const instructorSchema= mongoose.Schema({
     instance:{
         type:String,
         default:'instructor'
+    },
+    review:{
+        type:[],
     } 
 },
 {

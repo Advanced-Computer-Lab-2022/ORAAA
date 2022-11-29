@@ -12,6 +12,7 @@ import Admin from './pages/Admin';
 import CorporateTrainee from './pages/CorporateTrainee';
 import InstructorCreateCourse from './pages/InstructorCreateCourse';
 import ViewCourseTitles from './pages/ViewCourseTitles';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 function App() {
   return (
     <>
@@ -29,6 +30,7 @@ function App() {
           <Route path='/corporateTrainee' element={<CorporateTrainee/>} />
           <Route path='/InstructorCreateCourse' element={<InstructorCreateCourse/>} />
           <Route path='/ViewCourseTitles' element={<ViewCourseTitles/>} />
+          <Route path='/ChangePasswordPage' element={<ChangePasswordPage/>} />
        </Routes>
       </div>
      </Router>

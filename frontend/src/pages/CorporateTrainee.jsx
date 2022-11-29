@@ -4,6 +4,7 @@ import { toast } from 'react-toastify'
 import Spinner from '../components/Spinner'
 import { useSelector} from 'react-redux'
 import {useDispatch} from'react-redux'
+import {useNavigate } from 'react-router-dom'
 import {getCourses,reset } from '../features/courses/courseSlice'
 import CourseItem from '../components/CourseItem'
 import FilterForm from '../components/FilterForm'
@@ -12,7 +13,7 @@ import FilterForm from '../components/FilterForm'
 function CorporateTrainee() {
 
 
-  
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   
   const {isLoading,isError, message  } = useSelector(
@@ -37,6 +38,10 @@ function CorporateTrainee() {
 
 },[isError,cisError,message,dispatch,cmessage])
 
+const onClick=(e)=>{
+  e.preventDefault()
+  navigate('/ChangePasswordPage')
+}
 
 if (isLoading || cisLoading) {
   return <Spinner />
@@ -46,6 +51,11 @@ if (isLoading || cisLoading) {
     <>
       <section className='form'>
           <ChooseCountryForm/>
+          <div className="form-group">
+              <button type='submit' className='btn btn-block' onClick={onClick}>
+                 Change password
+              </button>
+          </div>
         </section>
         <br></br>
       <FilterForm/>
