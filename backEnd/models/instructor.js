@@ -31,13 +31,8 @@ const instructorSchema= mongoose.Schema({
     },
     rateArray:{
         type:[]
-    }
-    ,reviews:{
-        type:Number,
-        min:0,
-        max:10
-
-    }, country:{
+    }, 
+    country:{
         type:String,
         default:''
         

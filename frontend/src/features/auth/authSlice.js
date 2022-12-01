@@ -12,6 +12,8 @@ const initialState = {
   isError: false,
   isSuccess: false,
   isLoading: false,
+  RateInstructorIsLoading:false,
+  userLastRateToAnIns:'',
   message: '',
 }
 
@@ -47,6 +49,27 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
   try {
     const token =  thunkAPI.getState().auth.user.token
      return await authService.changePassword(data,token)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
+)
+
+//rate instructor
+export const RateInstructor = createAsyncThunk('auth/RateInstructor', async (Instructordata,thunkAPI) => {
+  try {
+     const token =  thunkAPI.getState().auth.user.token
+     const data={
+      instructorRate:Instructordata.instructorRate,
+      instructorReview:Instructordata.instructorReview
+     }
+     return await authService.RateInstructor(data,Instructordata.instructorId,token)
   } catch (error) {
     const message =
       (error.response &&
@@ -116,6 +139,20 @@ export const authSlice = createSlice({
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+        state.user = null
+      })
+      .addCase(RateInstructor.pending, (state) => {
+        state.RateInstructorIsLoading = true
+      })
+      .addCase(RateInstructor.fulfilled, (state, action) => {
+        state.RateInstructorIsLoading = false
+        state.isSuccess = true
+        state.userLastRateToAnIns = action.payload
+      })
+      .addCase(RateInstructor.rejected, (state, action) => {
+        state.RateInstructorIsLoading = false
         state.isError = true
         state.message = action.payload
         state.user = null

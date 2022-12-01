@@ -113,7 +113,7 @@ const guestGeneralSearchForCourse = async (courseData) => {
 }
 
 
- // generalfilter courses
+ // rate course
  const RateCourse = async (courseData,courseId,token) => {
   const config={
     headers:{
@@ -126,13 +126,72 @@ const guestGeneralSearchForCourse = async (courseData) => {
  return response.data
 
 }
+
+
+
+
+  //get course subtitle info when opned
+  const getCourseInfo = async (courseId,token) => {
+    const config={
+      headers:{
+          Authorization: `Bearer ${token}`
+      }
+    }
+    
+    const response = await axios.get(API_URL+`common/getCourseInfo?courseId=${courseId}`,config)
+    if(response){
+    localStorage.setItem('subTitles', JSON.stringify(response.data)) 
+    }
   
+    return response.data
+
+    
+  }
+  
+
+
+
+  //get course info when opned
+  const  getCourse = async (courseId,token) => {
+    const config={
+      headers:{
+          Authorization: `Bearer ${token}`
+      }
+    }
+    
+    
+    const response = await axios.get(API_URL+`common/getCourse?courseId=${courseId}`,config)
+  
+    if(response){
+      localStorage.setItem('selectedCourse', JSON.stringify(response.data)) 
+      }
+
+
+    return response.data
+  }
+
+
+
+  //get subTitle Exams
+  const  getSubTitleExam = async (subTitleId,token) => {
+    const config={
+      headers:{
+          Authorization: `Bearer ${token}`
+      }
+    }
+    
+    
+    const response = await axios.get(API_URL+`common/getSubTitleExam?subTitleId=${subTitleId}`,config)
+  
+    return response.data
+  }
+
 
   
 
   
 
-  
+ 
 
 
 
@@ -145,7 +204,10 @@ const guestGeneralSearchForCourse = async (courseData) => {
     filterCourse,
     guestFilterCourse,
     InsFilterCourse,
-    RateCourse
+    RateCourse,
+    getCourseInfo,
+    getCourse,
+    getSubTitleExam
     
   }
   

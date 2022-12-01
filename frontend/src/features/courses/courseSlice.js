@@ -1,14 +1,27 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import courseService from './courseService'
 
+
+// Get subtitles from localStorage
+const subTitles = JSON.parse(localStorage.getItem('subTitles'))
+console.log(subTitles)
+
+// Get selectrd course from localStorage
+const selectedCourse = JSON.parse(localStorage.getItem('selectedCourse'))
+
 const initialState = {
   courses: [],
+  subTitles: subTitles ? subTitles :[],
+  Exams:[],
+  selectedCourse: selectedCourse ? selectedCourse : null,
   isError: false,
   isSuccess: false,
   isLoading: false,
+  courseLoading:false,
   message: '',
   lastRate:''
 }
+
 
 
 //get all availble courses
@@ -152,7 +165,8 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
     try {
        const token =  thunkAPI.getState().auth.user.token
        const data={
-        rating:coursedata.rating
+        rating:coursedata.rating,
+        review:coursedata.review
        }
        return await courseService.RateCourse(data,coursedata.courseId,token)
     } catch (error) {
@@ -169,27 +183,98 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
 
 
 
+  //get course info when opened
+  export const getCourseInfo = createAsyncThunk('courses/getCourseInfo', async (coursedata,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await courseService.getCourseInfo(coursedata,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+
+  //get a certain course
+  export const getCourse = createAsyncThunk('courses/getCourse', async (coursedata,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       
+       return await courseService.getCourse(coursedata.courseId,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+  //get subtitle exam
+  export const getSubTitleExam = createAsyncThunk('courses/getSubTitleExam', async (subTitleId,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       
+       return await courseService.getSubTitleExam(subTitleId,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
 
 
   export const courseSlice = createSlice({
     name: 'course',
     initialState,
     reducers: {
-      reset: (state) => initialState,
+      reset: (state) => {
+        state.courses=[]
+        state.Exams=[]
+        state.isLoading = false
+        state.isSuccess = false
+        state.courseLoading=false
+        state.isError = false
+        state.message = ''
+        state.lastRate=''
+      },
+      resetOpenedCourse: (state) => {
+        state.selectedCourse=null
+        state.subTitles=[]
+      },
+
     },
     extraReducers: (builder) => {
         builder
 
         .addCase(getCourses.pending, (state) => {
             state.isLoading = true
+            state.courseLoading=true
           })
           .addCase(getCourses.fulfilled, (state, action) => {
             state.isLoading = false
+            state.courseLoading=false
             state.isSuccess = true
             state.courses = action.payload
           })
           .addCase(getCourses.rejected, (state, action) => {
             state.isLoading = false
+            state.courseLoading=false
             state.isError = true
             state.message = action.payload
           })
@@ -298,6 +383,45 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
             state.isError = true
             state.message = action.payload
           })
+          .addCase(getCourseInfo.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(getCourseInfo.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.subTitles = action.payload
+          })
+          .addCase(getCourseInfo.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(getCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(getCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.selectedCourse = action.payload
+          })
+          .addCase(getCourse.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(getSubTitleExam.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(getSubTitleExam.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.Exams = action.payload
+          })
+          .addCase(getSubTitleExam.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
 
 
     }
@@ -309,5 +433,5 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
 
 
 
-export const {reset} = courseSlice.actions
+export const {reset,resetOpenedCourse} = courseSlice.actions
 export default courseSlice.reducer

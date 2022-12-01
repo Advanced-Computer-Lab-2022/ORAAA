@@ -87,14 +87,24 @@ a {
 
 p {
   line-height: 1.7;
+  color: #000;
 }
 
 ul {
   list-style: none;
 }
 
+ol {
+  list-style: none; counter-reset: li
+}
+
+li::before {content: counter(li); color: rgb(12, 12, 12);
+  display: inline-block; width: 1em;
+  margin-left: -1em}
+
 li {
-  line-height: 2.2;
+  line-height: 1.5;
+  counter-increment: li
 }
 
 h1,

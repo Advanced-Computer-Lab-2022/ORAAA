@@ -5,7 +5,7 @@ import Spinner from '../components/Spinner'
 import { useSelector} from 'react-redux'
 import {useDispatch} from'react-redux'
 import {useNavigate } from 'react-router-dom'
-import {getCourses,reset } from '../features/courses/courseSlice'
+import {getCourses,reset,resetOpenedCourse } from '../features/courses/courseSlice'
 import CourseItem from '../components/CourseItem'
 import FilterForm from '../components/FilterForm'
 function MainIndividualTrainee() {
@@ -16,7 +16,7 @@ function MainIndividualTrainee() {
   const {isLoading,isError, message  } = useSelector(
     (state) => state.instructor
   )
-  const {courses,cisLoading,cisError, cmessage  } = useSelector(
+  const {courses,courseLoading,cisError, cmessage  } = useSelector(
     (state) => state.courses
   )
   useEffect(() => {
@@ -31,6 +31,7 @@ function MainIndividualTrainee() {
 
     return () =>{
       dispatch(reset())
+      dispatch(resetOpenedCourse())
     }
 
 },[isError,cisError,message,dispatch,cmessage])
@@ -42,7 +43,7 @@ const onClick=(e)=>{
 }
 
 
-if (isLoading || cisLoading) {
+if (isLoading || courseLoading) {
   return <Spinner />
 }
 

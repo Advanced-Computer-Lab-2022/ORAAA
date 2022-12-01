@@ -39,6 +39,21 @@ const login = async (userData) => {
  return response.data
 
 }
+
+
+ // rate Instructor
+ const RateInstructor = async (instructorData,instructorId,token) => {
+  const config={
+    headers:{
+       Authorization: `Bearer ${token}`
+   },
+ }
+
+ const response = await axios.put(`/api/common/rateInstructor?instructorId=${instructorId}`,instructorData,config)
+ 
+ return response.data
+
+}
   
 
 
@@ -57,7 +72,8 @@ const authService = {
   logout,
   login,
   register,
-  changePassword
+  changePassword,
+  RateInstructor
 }
 
 export default authService

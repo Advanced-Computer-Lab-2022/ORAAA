@@ -5,6 +5,8 @@ const Oadmin= require('../models/admin')
 const Ocourse= require('../models/course')
 const OcorporateTrainee=require('../models/corporateTrainee')
 const OindividualTrainee=require('../models/individualTrainee')
+const OsubTitle=require('../models/subTitle')
+const Oexam= require('../models/exam')
 
 const asyncHandler = require('express-async-handler')
 
@@ -277,20 +279,20 @@ const rateInstructor = async(req,res) => {
  
     const instructorId = req.query.instructorId;
 
-
+    console.log(instructorId)
     // check if userId is not empty
     if(instructorId){
      var avg  =0
      const arr= await Oinstructor.findById(instructorId)
-     arr.rateArray.push(req.body.rating)
+     arr.rateArray.push(req.body.instructorRate)
     for(var i=0;i<arr.rateArray.length;i++){
         avg=avg+Number(arr.rateArray[i])
     }    
     avg=avg/arr.rateArray.length
     arr.rate=Math.floor(avg)
-    
-    if(req.body.review && req.body.review!==""){
-    arr.review.push(req.body.review)
+    console.log(req.body.instructorReview)
+    if(req.body.instructorReview && req.body.instructorReview!==""){
+    arr.review.push(req.body.instructorReview)
     }
     const Ninstructor = await Oinstructor.findByIdAndUpdate(instructorId,arr,{new:true});
     
@@ -358,6 +360,79 @@ const changePassword = asyncHandler(async (req, res) => {
 
 
 
+//@desc  geting course info when opening
+//@route get /api/common/getCourseInfo
+//@access private
+const getCourseInfo = asyncHandler(async(req,res)=>{
+    
+    const courseId = req.query.courseId;
+     const Ncourse = await Ocourse.findOne({'_id':courseId})
+     
+     if(Ncourse){
+        
+        const NsubTitle= await OsubTitle.find({'counter':Ncourse.counter})
+        res.status(200).json(NsubTitle)
+
+    }else{
+        res.status(404)
+        throw new Error('course not found')
+    }
+})
+
+
+
+//@desc  get a certain course
+//@route get /api/common/getCourse
+//@access private
+const getCourse = asyncHandler(async(req,res)=>{
+    
+    const courseId = req.query.courseId;
+    
+     const Ncourse = await Ocourse.findOne({'_id':courseId})
+     
+     if(Ncourse){
+        
+        res.status(200).json(Ncourse)
+
+    }else{
+        res.status(404)
+        throw new Error('course not found')
+    }
+})
+
+
+
+
+//@desc  getting subTitle exams
+//@route get /api/common/getSubTitleExam
+//@access private
+const getSubTitleExam = asyncHandler(async(req,res)=>{
+    
+    const subTitleId = req.query.subTitleId;
+    
+     const NsubTitle = await OsubTitle.findOne({'_id':subTitleId})
+     
+     if(NsubTitle){
+        const Nexam = await Oexam.find({$and:[{'counter':NsubTitle.counter} ,{'subTitleCounter':NsubTitle.subTitleCounter}]})
+        if(Nexam){
+            res.status(200).json(Nexam)
+        }else{
+            res.status(404)
+            throw new Error('no exams')
+        }
+        
+
+    }else{
+        res.status(404)
+        throw new Error('subtitle not found')
+    }
+})
+
+
+
+
+
+
 
 
 
@@ -378,6 +453,9 @@ module.exports={
     chooseCourseToView,
     rateCourses,
     rateInstructor,
-    changePassword
+    changePassword,
+    getCourseInfo,
+    getCourse,
+    getSubTitleExam
 
 }

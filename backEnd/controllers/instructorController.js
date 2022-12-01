@@ -115,7 +115,7 @@ const createCourse= asyncHandler(async(req,res)=>{
 //@access private
 const getCourseTitles= asyncHandler(async(req,res)=>{
     const {_id} = await Oinstructor.findById(req.user.id)
-    const Ctitles = await OCourse.find({'instructorId':_id},{title:1,rating:1,_id:0 })
+    const Ctitles = await OCourse.find({'instructorId':_id},{title:1,rating:1,review:1,_id:0 })
     res.status(200).json(Ctitles)
 })
 

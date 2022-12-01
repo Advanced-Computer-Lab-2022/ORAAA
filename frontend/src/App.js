@@ -13,6 +13,7 @@ import CorporateTrainee from './pages/CorporateTrainee';
 import InstructorCreateCourse from './pages/InstructorCreateCourse';
 import ViewCourseTitles from './pages/ViewCourseTitles';
 import ChangePasswordPage from './pages/ChangePasswordPage';
+import CoursePage from './pages/CoursePage';
 function App() {
   return (
     <>
@@ -31,6 +32,7 @@ function App() {
           <Route path='/InstructorCreateCourse' element={<InstructorCreateCourse/>} />
           <Route path='/ViewCourseTitles' element={<ViewCourseTitles/>} />
           <Route path='/ChangePasswordPage' element={<ChangePasswordPage/>} />
+          <Route path='/CoursePage' element={<CoursePage/>} />
        </Routes>
       </div>
      </Router>
