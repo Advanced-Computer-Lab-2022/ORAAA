@@ -14,7 +14,11 @@ import InstructorCreateCourse from './pages/InstructorCreateCourse';
 import ViewCourseTitles from './pages/ViewCourseTitles';
 import ChangePasswordPage from './pages/ChangePasswordPage';
 import CoursePage from './pages/CoursePage';
+import ViewInstructorReviewsRating from './pages/ViewInstructorReviewsRating';
+import InstructorEdit from './pages/InstructorEdit';
+import ForgotPasswod from './pages/ForgotPasswod';
 function App() {
+  
   return (
     <>
      <Router>
@@ -33,6 +37,9 @@ function App() {
           <Route path='/ViewCourseTitles' element={<ViewCourseTitles/>} />
           <Route path='/ChangePasswordPage' element={<ChangePasswordPage/>} />
           <Route path='/CoursePage' element={<CoursePage/>} />
+          <Route path='/ViewInstructorReviewsRating' element={<ViewInstructorReviewsRating/>} />
+          <Route path='/InstructorEdit' element={<InstructorEdit/>} />
+          <Route path='/ForgotPasswod' element={<ForgotPasswod/>} />
        </Routes>
       </div>
      </Router>

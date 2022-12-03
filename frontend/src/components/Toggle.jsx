@@ -37,7 +37,6 @@ function Toggle() {
 	</span>
 	MyCourseMode
 </label>
-	
 		<div class="hint-content do--split-children">
 		  <p>If Checked your search and filter output are on your Courses only.</p>
 		</div>

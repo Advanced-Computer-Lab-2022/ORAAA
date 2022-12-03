@@ -4,13 +4,17 @@ import authService from './authService'
 // Get user from localStorage
 const user = JSON.parse(localStorage.getItem('user'))
 
+const changePasswordId = JSON.parse(localStorage.getItem('changePasswordId'))
+
 
 const initialState = {
   user: user ? user : null,
   userType: user ? user.typee : null,
+  changePasswordId:changePasswordId?changePasswordId:null,
   changePasswordSuccsses:'',
   isError: false,
   isSuccess: false,
+  emailSuccess:false,
   isLoading: false,
   RateInstructorIsLoading:false,
   userLastRateToAnIns:'',
@@ -82,6 +86,38 @@ export const RateInstructor = createAsyncThunk('auth/RateInstructor', async (Ins
 }
 )
 
+//forgot password
+export const forgotPassword = createAsyncThunk('auth/reset', async (userName,thunkAPI) => {
+  try {
+     return await authService.forgotPassword(userName)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
+)
+
+//Change password
+export const changePasswordF = createAsyncThunk('common/changePasswordF', async (data, thunkAPI) => {
+  try {
+     return await authService.changePasswordF(data)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
+)
+
 export const logout = createAsyncThunk('auth/logout', async () => {
   await authService.logout()
 })
@@ -95,6 +131,7 @@ export const authSlice = createSlice({
       state.isSuccess = false
       state.isError = false
       state.message = ''
+      state.emailSuccess=false
     },
   },
   extraReducers: (builder) => {
@@ -141,7 +178,6 @@ export const authSlice = createSlice({
         state.isLoading = false
         state.isError = true
         state.message = action.payload
-        state.user = null
       })
       .addCase(RateInstructor.pending, (state) => {
         state.RateInstructorIsLoading = true
@@ -155,12 +191,39 @@ export const authSlice = createSlice({
         state.RateInstructorIsLoading = false
         state.isError = true
         state.message = action.payload
-        state.user = null
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.emailSuccess = true
+        state.changePasswordId = action.payload
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(changePasswordF.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(changePasswordF.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.changePasswordId=null
+      })
+      .addCase(changePasswordF.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
       })
       .addCase(logout.fulfilled, (state) => {
         state.user = null
         state.userType= null
       })
+
+      
       
   },
 })

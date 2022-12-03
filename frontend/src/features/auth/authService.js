@@ -54,6 +54,38 @@ const login = async (userData) => {
  return response.data
 
 }
+
+ //forgot Password
+ const forgotPassword = async (username) => {
+ 
+
+ const response = await axios.post(API_URL+'common/forgotPassword',username)
+
+ if (response.data) {
+  localStorage.setItem('changePasswordId', JSON.stringify(response.data)) 
+}
+ 
+ return response.data
+
+}
+
+
+ // change password if forgotten
+ const changePasswordF = async (Data) => {
+
+  const changePasswordId = JSON.parse(localStorage.getItem('changePasswordId'))
+
+ const response = await axios.put(`api/common/changePasswordF?userId=${changePasswordId}`,Data)
+
+ if(response.data){
+  localStorage.removeItem('changePasswordId')
+ }
+ 
+ return response.data
+
+}
+
+
   
 
 
@@ -73,7 +105,9 @@ const authService = {
   login,
   register,
   changePassword,
-  RateInstructor
+  RateInstructor,
+  forgotPassword,
+  changePasswordF
 }
 
 export default authService

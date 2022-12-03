@@ -70,20 +70,8 @@ function ChangePasswordPage() {
       if (isLoading) {
         return <Spinner />
       }
-    
 
-
-
-
-
-
-
-
-
-
-
-
-
+      
   return (
     <>
     <section className='form'>

@@ -7,7 +7,7 @@ const OcorporateTrainee=require('../models/corporateTrainee')
 const OindividualTrainee=require('../models/individualTrainee')
 const OsubTitle=require('../models/subTitle')
 const Oexam= require('../models/exam')
-
+const nodemailer=require('nodemailer')
 const asyncHandler = require('express-async-handler')
 
 
@@ -429,6 +429,134 @@ const getSubTitleExam = asyncHandler(async(req,res)=>{
 })
 
 
+//@desc  forgot password send the user an email to change password
+//@route get /api/common/forgotPassword
+//@access public
+const forgotPassword = asyncHandler(async(req,res)=>{
+    const {userName} = req.body
+    var flag1=false
+    var flag2=false
+    var flag3=false
+    let email
+    const Ninstructor = await Oinstructor.findOne({userName})
+    const NcorporateTrainee = await OcorporateTrainee.findOne({userName})
+    const NindividualTrainee = await OindividualTrainee.findOne({userName})
+    const transporter = nodemailer. createTransport({
+        service:'gmail',
+        auth: {
+        user: `${process.env.EMAIL}`,
+        pass:`${process.env.PASSWORD}`
+       }
+    })
+    console.log(`${process.env.EMAIL}`)
+    console.log(`${process.env.PASSWORD}`)
+    if(Ninstructor){
+        flag1=true
+        email=Ninstructor.email
+
+    }else if(NcorporateTrainee){
+        flag2=true
+        email=NcorporateTrainee.email
+
+    }else if(NindividualTrainee ){
+        flag3=true
+        email=NindividualTrainee.email
+    }
+
+    if(flag1 || flag2 || flag3){
+        const mailOptions = {
+            from:'oraaa30@gmail.com', 
+            to:email ,
+            subject: 'Link To Reset Password',
+             text:`You are receiving this because you (or someone else) have requested the reset of the password for your account. \n\n`+
+            
+            `Please click on the following link, or paste this into your browser to complete the process within one hour of receiving it:\n\n`+
+            `http://localhost:3000/ForgotPasswod\n\n`+
+            "If you did not request this, please ignore this email and your password will remain unchanged.\n"
+        }
+
+
+        transporter.sendMail(mailOptions, function (err, response) {
+            if (err) {
+            console.error ('there was an error: ', err);
+            } else {
+            console. log( 'here is the res: ', response);
+            }
+          })
+
+          if(flag1){
+            res.status(200).json(Ninstructor._id)
+          }else if(flag2){
+            res.status(200).json(NcorporateTrainee._id)
+          }else{
+            res.status(200).json(NindividualTrainee._id)
+          }
+    
+    }else{
+        res.status(400)
+        throw new Error('Invalid userName')
+    }
+
+
+    
+    
+
+})
+
+// @desc    user changes his password
+// @route   PUT /api/common/changePassword
+// @access  Private
+const changePasswordF = asyncHandler(async (req, res) => {
+    const {newPassword} = req.body
+  
+    if (!newPassword) {
+      res.status(400)
+      throw new Error('Please fill all the required fields')
+    }
+
+    const _id = req.query.userId;
+
+    // Hash password
+    const salt = await bcrypt.genSalt(10)
+    const hashedPassword = await bcrypt.hash(newPassword, salt)
+
+
+   if(_id){
+    var Ninstructor = await Oinstructor.findOne({_id})
+    var NcorporateTrainee = await OcorporateTrainee.findOne({_id})
+    var NindividualTrainee = await OindividualTrainee.findOne({_id})
+   
+      
+    if(Ninstructor){
+        const replace = await Oinstructor.findById(_id)
+        replace.password=hashedPassword
+        Ninstructor= await Oinstructor.findByIdAndUpdate(_id,replace,{new:true})
+        res.status(200).json(Ninstructor.password)
+       
+    }else if(NcorporateTrainee){
+        const replace = await OcorporateTrainee.findById(_id)
+        replace.password=hashedPassword
+        NcorporateTrainee= await OcorporateTrainee.findByIdAndUpdate(_id,replace,{new:true})
+        res.status(200).json(NcorporateTrainee.password)
+
+
+    }else if(NindividualTrainee){
+        const replace = await OindividualTrainee.findById(_id)
+        replace.password=hashedPassword
+        NindividualTrainee= await OindividualTrainee.findByIdAndUpdate(_id,replace,{new:true})
+        res.status(200).json(NindividualTrainee.password)
+
+
+    }else{
+        res.status(400)
+        throw new Error('Change Password Failed')
+    }
+
+}
+  })
+
+
+
 
 
 
@@ -456,6 +584,8 @@ module.exports={
     changePassword,
     getCourseInfo,
     getCourse,
-    getSubTitleExam
+    getSubTitleExam,
+    forgotPassword,
+    changePasswordF
 
 }

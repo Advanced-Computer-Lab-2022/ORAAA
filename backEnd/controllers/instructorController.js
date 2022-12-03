@@ -173,11 +173,26 @@ const editEmailOrMiniBio= asyncHandler(async(req,res)=>{
 })
 
 
+//@desc Instructor gets his rates and reviews
+//@route get /api/instructor/viewRateReview
+//@access private
+const viewRateReview= asyncHandler(async(req,res)=>{
+    const {_id} = await Oinstructor.findById(req.user.id)
+    const Ninstructor = await Oinstructor.find({'_id':_id},{rate:1,review:1,_id:0 })
+    if(Ninstructor){
+    res.status(200).json(Ninstructor)
+    }else{
+        res.status(404)
+    }
+})
+
+
 module.exports={
     createCourse,
     getCourseTitles,
     filterCourses,
     searchInstructorCourses,
-    editEmailOrMiniBio
+    editEmailOrMiniBio,
+    viewRateReview
     
 }

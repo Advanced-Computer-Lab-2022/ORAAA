@@ -37,9 +37,45 @@ const selectCountry = async (country,token) =>{
 
 
 
+
+
+// View Intructor rating/reviews
+const viewRateReview = async (token) =>{
+  const config={
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+  }
+
+  const response = await axios.get(API_URL+'instructor/viewRateReview',config)
+
+  return response.data
+
+}
+
+
+// editEmailOrMiniBio
+const editEmailOrMiniBio = async (data,token) =>{
+  const config={
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+  }
+
+  const response = await axios.put(API_URL+'instructor/editEmailOrMiniBio',data,config)
+
+  return response.data
+
+}
+
+
+
+
 const instructorService= {
     createCourse,
-    selectCountry
+    selectCountry,
+    viewRateReview,
+    editEmailOrMiniBio
 
 }
 

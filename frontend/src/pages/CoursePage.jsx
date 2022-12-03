@@ -197,16 +197,22 @@ function CoursePage() {
       </div>
          {Exams.map((exam) => (
                   <div className="form-group">
-                      <p>{exam.question}?</p>
-                      {exam.answers.map((answer)=>(
-                        <div className='radio'>
+                      <div className='radio'>
+                      <p>Q:{exam.question}?</p>
+                      <br/>
                           <ol>
+                      {exam.answers.map((answer)=>(
+                        
                             <li>
-                               <input type="radio" name="userType" value={answer} onChange={e=>setAnswer(e.target.value)} /> {answer}
+                              <label className='radioContainer'>{answer}
+                              <input type="radio" name="radioContainer" value={answer} onChange={e=>setAnswer(e.target.value)}/>
+                              <span className='checkmark'></span>
+                              </label>
                              </li>
-                          </ol>
-                       </div>
+                        
                        ))}
+                         </ol>
+                       </div>
                        <button type='submit' className='btn btn-block' onClick={(e)=>{
                         e.preventDefault()
                         if(answer===exam.answers[exam.rightAnswer]){
@@ -218,7 +224,7 @@ function CoursePage() {
                        }}>
                          submit
                        </button>
-                       <p>-----------------------------------------------------------------------------------------------------------------------------</p>
+                       <div className='line'><p>-----------------------------------------------------------------------------------------------------------------------------</p></div>
                   </div>
                ))}
             <h2>Exam Grade:{gotRight}/{Exams.length}</h2>

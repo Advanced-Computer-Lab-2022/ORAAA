@@ -6,6 +6,7 @@ import { useSelector} from 'react-redux'
 import {useNavigate } from 'react-router-dom'
 import CourseItem from '../components/CourseItem'
 import {useDispatch} from'react-redux'
+import { resetR } from '../features/instructor/instructorSlice';
 import { getCourses,reset} from '../features/courses/courseSlice'
 import ChooseCountryForm from '../components/ChooseCountryForm'
 import FilterForm from '../components/FilterForm'
@@ -45,6 +46,7 @@ function Instructor() {
 
     return () =>{
       dispatch(reset())
+      dispatch(resetR())
     }
 
 },[isError,cisError,message,dispatch,cmessage])
@@ -64,6 +66,16 @@ function Instructor() {
   const onClick=(e)=>{
     e.preventDefault()
     navigate('/ChangePasswordPage')
+  }
+
+  const viewInstructor=(e)=>{
+    e.preventDefault()
+    navigate('/ViewInstructorReviewsRating')
+  }
+
+  const EditInstructor = (e)=>{
+    e.preventDefault()
+    navigate('/InstructorEdit')
   }
   
 
@@ -97,6 +109,16 @@ if (isLoading || cisLoading) {
     />}
           </div>
        </form>
+       <div className="form-group">
+          <button type='submit' className='btn btn-block' onClick={viewInstructor}>
+              View my Rate/Review
+           </button>
+        </div>
+        <div className="form-group">
+          <button type='submit' className='btn btn-block' onClick={EditInstructor}>
+              Edit Email/MiniBiography
+           </button>
+        </div>
     </section>
     <br></br>
     <section className='form'>

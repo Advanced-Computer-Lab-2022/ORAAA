@@ -7,7 +7,6 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "client": "npm start --prefix frontend"
-    
   },
   "repository": {
     "type": "git",
@@ -26,7 +25,8 @@
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.6.7"
+    "mongoose": "^6.6.7",
+    "nodemailer": "^6.8.0"
   },
   "devDependencies": {
     "concurrently": "^7.5.0",

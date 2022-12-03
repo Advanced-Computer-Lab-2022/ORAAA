@@ -3,6 +3,7 @@ import instructorService from './instructorService'
 
 const initialState = {
     InstructorCreatedCourses:[],
+    InstructorRR:[],
     InstructorSelectedCountry:'',
     InstructorSearchMode:'Any',
     isError: false,
@@ -42,6 +43,38 @@ const initialState = {
   })
 
 
+  //instructor view rating/reviews
+  export const viewRateReview = createAsyncThunk('instructor/viewRateReview',async(_,thunkAPI)=>{
+    try {
+        const token =  thunkAPI.getState().auth.user.token
+        return await instructorService.viewRateReview(token)
+      } catch (error) {
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString()
+        return thunkAPI.rejectWithValue(message)
+      }
+
+  })
+
+
+   //instructor select selectCountry
+   export const editEmailOrMiniBio = createAsyncThunk('instructor/editEmailOrMiniBio',async(data,thunkAPI)=>{
+    try {
+        const token =  thunkAPI.getState().auth.user.token
+        return await instructorService.editEmailOrMiniBio(data,token)
+      } catch (error) {
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString()
+        return thunkAPI.rejectWithValue(message)
+      }
+
+  })
+
+
 
 
 
@@ -50,8 +83,17 @@ const initialState = {
     name: 'Instructor',
     initialState,
     reducers: {
-      reset: (state) => initialState,
-      insMode:(state)=> {state.InstructorSearchMode='Instructor'}
+      reset: (state) => {
+        state.isError=false
+        state.isLoading=false
+        state.isSuccess=false
+        state.message=''
+        state.InstructorSearchMode='Any'
+      },
+      insMode:(state)=> {state.InstructorSearchMode='Instructor'},
+      resetR:(state)=>{
+        state.InstructorRR=[]
+      }
     },
     extraReducers: (builder) => {
         builder
@@ -83,16 +125,43 @@ const initialState = {
             state.message = action.payload
             
           })
+          .addCase(viewRateReview.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(viewRateReview.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.InstructorRR=action.payload   
+          })
+          .addCase(viewRateReview.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+            
+          })
+          .addCase(editEmailOrMiniBio.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(editEmailOrMiniBio.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true 
+          })
+          .addCase(editEmailOrMiniBio.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+            
+          })
           
 
-
+          
         }
-
+        
 })
 
 
 
 
 
-  export const { reset,insMode } = instructorSlice.actions
+  export const { reset,insMode,resetR } = instructorSlice.actions
   export default instructorSlice.reducer

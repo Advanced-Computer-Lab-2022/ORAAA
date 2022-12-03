@@ -3,7 +3,7 @@ import { FaSignInAlt } from 'react-icons/fa'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { login, reset } from '../features/auth/authSlice'
+import { login, reset ,forgotPassword} from '../features/auth/authSlice'
 import Spinner from '../components/Spinner'
 
 
@@ -19,13 +19,17 @@ function Login() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
+  const { user, isLoading, isError, isSuccess, message ,emailSuccess} = useSelector(
     (state) => state.auth
   )
 
   useEffect(() => {
     if (isError) {
       toast.error(message)
+    }
+
+    if(emailSuccess){
+      toast.success('Go Check your mail Address to change password')
     }
 
     if (isSuccess || user) {
@@ -42,7 +46,7 @@ function Login() {
   }
 
     dispatch(reset())
-  }, [user, isError, isSuccess, message, navigate, dispatch])
+  }, [user, isError, isSuccess, message, navigate, dispatch,emailSuccess])
 
   const onChange = (e) => {
     setFormData((prevState) => ({
@@ -60,6 +64,15 @@ function Login() {
     }
 
     dispatch(login(userData))
+  }
+
+  const forgot=(e)=>{
+    e.preventDefault()
+
+    const user={
+      userName
+    }
+    dispatch(forgotPassword(user))
   }
 
   if (isLoading) {
@@ -107,6 +120,8 @@ function Login() {
           </div>
         </form>
       </section>
+      <br/>
+            <h4 className='forgot' onClick={forgot}>Forgot Password</h4>
     </>
   )
 }
