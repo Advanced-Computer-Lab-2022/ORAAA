@@ -220,6 +220,7 @@ function CoursePage() {
                         }else{
                           window.alert("Wrong Answer\nRight Answer: "+exam.answers[exam.rightAnswer]);
                         }
+                        e.currentTarget.setAttribute("disabled", true);
 
                        }}>
                          submit
