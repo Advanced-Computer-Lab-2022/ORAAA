@@ -187,6 +187,16 @@ const guestGeneralSearchForCourse = async (courseData) => {
   }
 
 
+
+
+  // Get all courses sorted by views
+const getSortedCourses = async () => {
+   
+  const response = await axios.get(API_URL+'/getSortedCourses')
+
+  return response.data
+}
+
   
 
   
@@ -207,7 +217,8 @@ const guestGeneralSearchForCourse = async (courseData) => {
     RateCourse,
     getCourseInfo,
     getCourse,
-    getSubTitleExam
+    getSubTitleExam,
+    getSortedCourses
     
   }
   

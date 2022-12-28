@@ -5,10 +5,13 @@ const Oadmin= require('../models/admin')
 const Ocourse= require('../models/course')
 const OcorporateTrainee=require('../models/corporateTrainee')
 const OindividualTrainee=require('../models/individualTrainee')
+const OcourseProgress=require('../models/courseProgress')
 const OsubTitle=require('../models/subTitle')
 const Oexam= require('../models/exam')
 const nodemailer=require('nodemailer')
 const asyncHandler = require('express-async-handler')
+const { strip } = require('colors')
+const { default: Stripe } = require('stripe')
 
 
 
@@ -30,7 +33,8 @@ const login = asyncHandler(async(req,res)=>{
         res.json({
             name: Ninstructor.userName,
             token: generateToken(Ninstructor._id),
-            typee: Ninstructor.instance
+            typee: Ninstructor.instance,
+            acceptedTerms:Ninstructor.acceptedTerms
         })
 
 
@@ -391,7 +395,9 @@ const getCourse = asyncHandler(async(req,res)=>{
      const Ncourse = await Ocourse.findOne({'_id':courseId})
      
      if(Ncourse){
-        
+        const replace = Ncourse
+        replace.views=replace.views+1
+        await Ocourse.findByIdAndUpdate(courseId,replace,{new:true})
         res.status(200).json(Ncourse)
 
     }else{
@@ -555,6 +561,151 @@ const changePasswordF = asyncHandler(async (req, res) => {
 }
   })
 
+  
+
+ 
+//@desc  adds a new course to the course array of a student
+//@route PUT /api/common/addEnrolledCourse
+//@access private
+const addEnrolledCourse = asyncHandler(async(req,res)=>{
+
+    const {courseId} = req.body
+    const userId=req.user.id
+    console.log(courseId)
+    console.log(userId)
+    let flag
+    let Ncourse
+    if(courseId){
+        Ncourse = await Ocourse.findById(courseId)
+    }
+    if(userId){
+    var NcorporateTrainee = await OcorporateTrainee.findOne({userId})
+    var NindividualTrainee = await OindividualTrainee.findOne({userId})
+    }
+     
+
+    if(NindividualTrainee){
+        flag =  NindividualTrainee.inrolledCourses.includes(`${courseId}`)
+    }
+     
+    if(!flag){
+    if(userId && courseId){
+        const studentId=userId  
+        await OcourseProgress.create({
+            studentId,
+            courseId
+        })
+    }
+     
+     if(Ncourse && NindividualTrainee){
+        const replace = await OindividualTrainee.findById(userId)
+        replace.inrolledCourses.push(courseId)
+        NindividualTrainee= await OindividualTrainee.findByIdAndUpdate(userId,replace,{new:true})
+        res.status(200).json('Done')
+     }else if(Ncourse && NcorporateTrainee){
+        const replace = await OcorporateTrainee.findById(userId)
+        replace.inrolledCourses.push(courseId)
+        NcorporateTrainee= await OcorporateTrainee.findByIdAndUpdate(userId,replace,{new:true})
+        res.status(200).json('Done')
+    }else{
+        res.status(404)
+        throw new Error('Not a student')
+    }
+}else{
+    res.status(400).json('Already enrolled')
+}
+})
+  
+
+
+
+
+//!!!!not complete 
+//@desc  getting a student progress for a certain course
+//@route get /api/common/getProgress
+//@access private
+const getProgress = asyncHandler(async(req,res)=>{
+    
+    const courseId = req.query.courseId
+    const _id=req.user.id
+    const NcourseProgress= await OcourseProgress.find({$and:[{'studentId':_id},{'courseId':courseId}]})
+     
+     if(NcourseProgress){
+        
+        
+
+    }else{
+        res.status(404)
+        throw new Error('course not found')
+    }
+})
+
+
+
+//@desc  checkout 
+//@route POST /api/common/checkout
+//@access private
+const checkout = asyncHandler(async(req,res)=>{
+
+    const courseId = req.query.courseId;
+    const Ncourse = await Ocourse.findOne({'_id':courseId})
+
+    if(Ncourse){
+    const priceInCents = Ncourse.price*100
+    const courseData = [{ 
+                price_data: {
+                 currency: "usd",
+                 product_data: {
+                     name: Ncourse.title,
+                 },
+                 unit_amount: priceInCents,
+              },
+                 quantity:1,
+             }]
+    const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY)
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items:courseData,
+        success_url: `http://localhost:3000/PaymentSuccess?courseId=${courseId}`,
+        cancel_url: 'http://localhost:4000',
+          
+
+    })
+    
+    res.status(200).json({url:session.url})
+
+}else{
+    res.json('failed')
+}
+
+
+
+
+})
+
+
+//@desc  getting all courses in a sorted order
+//@route get /api/getSortedCourses
+//@access public
+const getSortedCourses = asyncHandler(async(req,res)=>{
+    
+    const Ncourse= await Ocourse.find()
+    Ncourse.sort((a, b) => (a.views > b.views) ? -1 : 1)
+   
+if(Ncourse){
+    res.status(200).json(Ncourse)
+
+}else{
+   res.status(404)
+   throw new Error('no availble courses')
+}
+
+})
+
+
+
+
 
 
 
@@ -586,6 +737,10 @@ module.exports={
     getCourse,
     getSubTitleExam,
     forgotPassword,
-    changePasswordF
+    changePasswordF,
+    getProgress,
+    checkout,
+    addEnrolledCourse,
+    getSortedCourses
 
 }

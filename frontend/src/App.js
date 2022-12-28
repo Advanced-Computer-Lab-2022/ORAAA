@@ -1,7 +1,6 @@
 import {BrowserRouter as Router,Routes,Route} from 'react-router-dom'
 import {ToastContainer} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import Header from './components/Header';
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register';
@@ -17,13 +16,16 @@ import CoursePage from './pages/CoursePage';
 import ViewInstructorReviewsRating from './pages/ViewInstructorReviewsRating';
 import InstructorEdit from './pages/InstructorEdit';
 import ForgotPasswod from './pages/ForgotPasswod';
+import PaymentSuccess from './pages/PaymentSuccess';
+import MostViewed from './components/MostViewed';
+import MostViewedPage from './pages/MostViewedPage'
 function App() {
   
   return (
     <>
      <Router>
       <div className='container'>
-        <Header/>
+        
        <Routes>
           <Route path='/' element={<Home/>} />
           <Route path='/login' element={<Login/>} />
@@ -40,6 +42,10 @@ function App() {
           <Route path='/ViewInstructorReviewsRating' element={<ViewInstructorReviewsRating/>} />
           <Route path='/InstructorEdit' element={<InstructorEdit/>} />
           <Route path='/ForgotPasswod' element={<ForgotPasswod/>} />
+          <Route path='/PaymentSuccess' element={<PaymentSuccess/>} />
+          <Route path='/MostViewed' element={<MostViewed/>} />
+          <Route path='/MostViewedPage' element={<MostViewedPage/>} />
+
        </Routes>
       </div>
      </Router>

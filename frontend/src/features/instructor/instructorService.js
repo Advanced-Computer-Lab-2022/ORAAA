@@ -68,6 +68,21 @@ const editEmailOrMiniBio = async (data,token) =>{
 
 }
 
+// accepts terms and condition
+const acceptForm = async (token) =>{
+  const config={
+    headers:{
+        Authorization:`Bearer ${token}`
+    }
+  }
+
+  console.log(config.headers.Authorization)
+  const response = await axios.put(API_URL+'instructor/acceptForm','',config)
+
+  return response.data
+
+}
+
 
 
 
@@ -75,7 +90,8 @@ const instructorService= {
     createCourse,
     selectCountry,
     viewRateReview,
-    editEmailOrMiniBio
+    editEmailOrMiniBio,
+    acceptForm
 
 }
 

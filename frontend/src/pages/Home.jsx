@@ -6,6 +6,8 @@ import Spinner from '../components/Spinner'
 import SelectCountryForm from '../components/SelectCountryForm'
 import { getCourses, reset} from '../features/courses/courseSlice'
 import FilterForm from '../components/FilterForm'
+import Header from '../components/Header';
+import MostViewed from '../components/MostViewed'
 
 
 function Home() {
@@ -36,9 +38,11 @@ function Home() {
 
   return (
     <>
+    <Header/>
     <section><SelectCountryForm/></section>
       <br></br>
       <FilterForm/>
+      <MostViewed/>
       <br></br>
       <section className='content'>
         {courses.length > 0 ? (

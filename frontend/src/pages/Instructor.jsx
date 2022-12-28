@@ -1,36 +1,47 @@
 import { useEffect } from 'react'
 import { toast } from 'react-toastify'
-import  { useState } from 'react';
+import  { useState,useRef } from 'react';
 import Spinner from '../components/Spinner'
 import { useSelector} from 'react-redux'
 import {useNavigate } from 'react-router-dom'
 import CourseItem from '../components/CourseItem'
 import {useDispatch} from'react-redux'
-import { resetR } from '../features/instructor/instructorSlice';
+import { resetR,acceptForm } from '../features/instructor/instructorSlice';
 import { getCourses,reset} from '../features/courses/courseSlice'
 import ChooseCountryForm from '../components/ChooseCountryForm'
 import FilterForm from '../components/FilterForm'
 import Toggle from '../components/Toggle'
 import Popup from '../components/Popup';
+import Header from '../components/Header';
+import MostViewed from '../components/MostViewed'
 
 function Instructor() {
 
-
+  const acc = JSON.parse(localStorage.getItem('InstructorAcc'))
   const navigate = useNavigate()
   const dispatch = useDispatch()
   
-  const {isLoading,isError, message  } = useSelector(
+  const {isLoading,isError, message,InstructorAcc,isSuccess} = useSelector(
     (state) => state.instructor
   )
-  const {courses,cisLoading,cisError, cmessage  } = useSelector(
+
+  const {user} = useSelector(
+    (state) => state.auth
+  )
+  const {courses,cisLoading,cisError, cmessage} = useSelector(
     (state) => state.courses
   )
 
   const [isOpen, setIsOpen] = useState(false);
+
+  const accepted = useRef(false)
  
   const togglePopup = () => {
     setIsOpen(!isOpen);
   }
+
+
+  
 
  
   useEffect(() => {
@@ -42,6 +53,18 @@ function Instructor() {
       toast.error(cmessage)
     }
 
+    if(user.acceptedTerms===false){
+      accepted.current=true
+    }
+
+    if(acc && acc===true){
+      accepted.current=false
+    }
+
+    if(isSuccess && InstructorAcc===true){
+      localStorage.setItem('InstructorAcc',true) 
+    }
+
     dispatch(getCourses())
 
     return () =>{
@@ -49,7 +72,7 @@ function Instructor() {
       dispatch(resetR())
     }
 
-},[isError,cisError,message,dispatch,cmessage])
+},[isError,cisError,message,dispatch,cmessage,accepted,user,InstructorAcc,acc,isSuccess])
   const onSubmit=(e)=>{
     e.preventDefault()
 
@@ -87,7 +110,7 @@ if (isLoading || cisLoading) {
 
   return (
     <>
-           
+        <Header/>
         <section className='form'>
           <Toggle/>
           <ChooseCountryForm/>
@@ -99,7 +122,19 @@ if (isLoading || cisLoading) {
           <button type='submit' className='btn btn-block'>
               Create Course Page
            </button>
-           {isOpen && <Popup
+           {accepted.current && <Popup
+      content={<>
+        <b>Contract</b>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <button className='btn btn-block' onClick={e=>{
+           e.preventDefault()
+           dispatch(acceptForm())
+           }}>Accept
+        </button>
+      </>}
+      handleClose={togglePopup}
+    />}
+     {isOpen && <Popup
       content={<>
         <b>Contract</b>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
@@ -137,6 +172,7 @@ if (isLoading || cisLoading) {
     </section>
       <br></br>
       <FilterForm/>
+      <MostViewed/>
       <br></br>
     <section className='content'>
         {courses.length > 0 ? (

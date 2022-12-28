@@ -44,7 +44,12 @@ const instructorSchema= mongoose.Schema({
     },
     review:{
         type:[],
-    } 
+    },
+    acceptedTerms:{
+        type:Boolean,
+        default:false
+
+    },
 },
 {
     timestamps:true

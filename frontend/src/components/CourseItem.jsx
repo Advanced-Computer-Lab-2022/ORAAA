@@ -78,9 +78,11 @@ function CourseItem({ course }) {
           <h4>Price:{course.price}</h4>
          } 
          {isHovering && (
-           <div>
+            <div className="form-group">   
              <h4>Subject:{course.subject}</h4>
-             <h4>ShortSummery:{course.shortSummery}</h4>
+             <h4>CourseOutline:{course.shortSummery}</h4>
+            <iframe title="PreviewVideo" width="500" height="320" src={course.previewLink}>
+            </iframe>
            </div>
          )}
          {user && userType!=='instructor' && (

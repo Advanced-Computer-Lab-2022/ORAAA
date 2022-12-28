@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { register, reset } from '../features/auth/authSlice'
 import Spinner from '../components/Spinner'
+import Popup from '../components/Popup';
+
 
 function Register() {
     
@@ -21,6 +23,11 @@ function Register() {
 
  const {userName,firstName,lastName,email,password,password2,gender,country} = formData
 
+ const [isOpen, setIsOpen] = useState(false);
+ 
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  }
  const navigate = useNavigate()
  const dispatch = useDispatch()
  const {user,isLoading, isError,isSuccess,message} = useSelector((state) => state.auth) 
@@ -49,21 +56,7 @@ const onChange=(e) =>{
 
 const onSubmit=(e) =>{
    e.preventDefault()
-   if(password !== password2){
-    toast.error('Passwords do not match')
-}else{
-  const userData = {
-    userName,
-    firstName,
-    lastName,
-    email,
-    gender,
-    country,
-    password
-  }
-
-  dispatch(register(userData))
-}
+   togglePopup()
 
 }
 
@@ -86,6 +79,30 @@ if (isLoading) {
 
     <section className='form'>
       <form onSubmit={onSubmit}>
+      {isOpen && <Popup
+      content={<>
+        <b>Contract</b>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <button className='btn btn-block' onClick={(e)=>{
+          e.preventDefault()
+          if(password !== password2){
+             toast.error('Passwords do not match')
+          }else{
+           const userData = {
+           userName,
+           firstName,
+           lastName,
+           email,
+           gender,
+           country,
+           password
+         }
+          dispatch(register(userData))
+           }}}>Accept
+        </button>
+      </>}
+      handleClose={togglePopup}
+    />}
         <div className="form-group">
                <input type='text' 
                className='form-control' 

@@ -86,6 +86,29 @@ const login = async (userData) => {
 }
 
 
+
+ // adds course to student 
+ const addEnrolledCourse = async (Data,token) => {
+
+  const config={
+    headers:{
+       Authorization: `Bearer ${token}`
+   },
+ }
+
+ const courseId ={
+  courseId:Data
+ }
+
+ const response = await axios.put('api/common/addEnrolledCourse',courseId,config)
+
+ 
+ return response.data
+
+}
+
+
+
   
 
 
@@ -98,6 +121,7 @@ const login = async (userData) => {
 // Logout user
 const logout = () => {
   localStorage.removeItem('user')
+  localStorage.removeItem('InstructorAcc')
 }
 
 const authService = {
@@ -107,7 +131,8 @@ const authService = {
   changePassword,
   RateInstructor,
   forgotPassword,
-  changePasswordF
+  changePasswordF,
+  addEnrolledCourse
 }
 
 export default authService

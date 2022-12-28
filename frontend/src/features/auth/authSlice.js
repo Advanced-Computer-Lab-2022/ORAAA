@@ -19,6 +19,7 @@ const initialState = {
   RateInstructorIsLoading:false,
   userLastRateToAnIns:'',
   message: '',
+  studentEnrolled:'',
 }
 
 // Register user
@@ -116,6 +117,23 @@ export const changePasswordF = createAsyncThunk('common/changePasswordF', async 
     return thunkAPI.rejectWithValue(message)
   }
 }
+)
+
+  //adds course to student 
+  export const addEnrolledCourse = createAsyncThunk('auth/addEnrolledCourse', async (data,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await authService.addEnrolledCourse(data,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
 )
 
 export const logout = createAsyncThunk('auth/logout', async () => {
@@ -221,6 +239,19 @@ export const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => {
         state.user = null
         state.userType= null
+      })
+      .addCase(addEnrolledCourse.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(addEnrolledCourse.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.studentEnrolled=action.payload
+      })
+      .addCase(addEnrolledCourse.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
       })
 
       

@@ -8,6 +8,7 @@ import {useNavigate } from 'react-router-dom'
 import {getCourses,reset,resetOpenedCourse } from '../features/courses/courseSlice'
 import CourseItem from '../components/CourseItem'
 import FilterForm from '../components/FilterForm'
+import MostViewed from '../components/MostViewed'
 
 
 function CorporateTrainee() {
@@ -60,6 +61,7 @@ if (isLoading || courseLoading) {
         </section>
         <br></br>
       <FilterForm/>
+      <MostViewed/>
       <br></br>
     <section className='content'>
         {courses.length > 0 ? (

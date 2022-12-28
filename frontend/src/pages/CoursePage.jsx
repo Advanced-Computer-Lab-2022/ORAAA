@@ -112,6 +112,7 @@ function CoursePage() {
                         setselectedSubTitle(subTitle)
                         dispatch(getSubTitleExam(subTitle._id))
                         setSubTitleFlag(true)
+                        setGotRight(0)
                     
                        }}>
                        {subTitle.subTitleName}

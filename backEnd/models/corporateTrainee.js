@@ -23,6 +23,9 @@ const corporateTraineeSchema= mongoose.Schema({
     instance:{
         type:String,
         default:'corporateTrainee'
+    },
+    inrolledCourses:{
+        type:[]
     }  
 },
     {

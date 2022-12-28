@@ -186,6 +186,25 @@ const viewRateReview= asyncHandler(async(req,res)=>{
     }
 })
 
+//@desc Instructor accepts terms and conditions
+//@route PUT /api/instructor/acceptForm
+//@access private
+const acceptForm= asyncHandler(async(req,res)=>{
+    const _id =req.user.id 
+    console.log(_id)
+   if(_id){
+      const Ninstructor= await Oinstructor.findById(_id)
+      Ninstructor.acceptedTerms=true
+      await Oinstructor.findByIdAndUpdate(_id,Ninstructor,{new:true})
+      res.status(200).json(true)
+     }else{
+      res.status(400)
+      throw new Error('not working')
+   }
+
+    
+})
+
 
 module.exports={
     createCourse,
@@ -193,6 +212,7 @@ module.exports={
     filterCourses,
     searchInstructorCourses,
     editEmailOrMiniBio,
-    viewRateReview
+    viewRateReview,
+    acceptForm
     
 }

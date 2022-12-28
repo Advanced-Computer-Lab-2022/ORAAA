@@ -34,7 +34,6 @@ const individualTraineeSchema= mongoose.Schema({
         
 
     }, 
-   
     inrolledCourses:{
         type:[]
         

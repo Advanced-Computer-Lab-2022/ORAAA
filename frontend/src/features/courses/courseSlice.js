@@ -237,6 +237,22 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
   }
 )
 
+//get all availble courses
+export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', async (_, thunkAPI) => {
+  try {
+     return await courseService.getSortedCourses()
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
+)
+
 
 
   export const courseSlice = createSlice({
@@ -422,8 +438,21 @@ export const guestGeneralSearchForCourse = createAsyncThunk('courses/guestGenera
             state.isError = true
             state.message = action.payload
           })
+          .addCase(getSortedCourses.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(getSortedCourses.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.courses = action.payload
+          })
+          .addCase(getSortedCourses.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
 
-
+          
     }
 })
 
