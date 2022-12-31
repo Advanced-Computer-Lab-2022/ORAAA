@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useSelector,useDispatch} from 'react-redux'
 import { toast } from 'react-toastify'
-import {getCourseInfo,getCourse} from '../features/courses/courseSlice'
+import {getCourseInfo,getCourse,payForCourse,getProgress} from '../features/courses/courseSlice'
 import Spinner from '../components/Spinner'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +29,7 @@ function CourseItem({ course }) {
     if (isError) {
       toast.error(message)
     }
+
  
    
 
@@ -55,7 +56,19 @@ function CourseItem({ course }) {
     }
     dispatch(getCourse(Id))
     dispatch(getCourseInfo(course._id))
+    dispatch(getProgress(course._id))
     navigate('/CoursePage')
+    
+
+  }
+
+  const pay = (e)=>{
+    e.preventDefault()
+    
+    const Id={
+       courseId:course._id
+    }
+    dispatch(payForCourse(Id))
     
 
   }
@@ -90,6 +103,11 @@ function CourseItem({ course }) {
           <div className="form-group">
             <button type='submit' className='btn btn-block' onClick={open} key={course._id}>
               open Course
+            </button>
+          </div>
+          <div className="form-group">
+            <button type='submit' className='btn btn-block' onClick={pay} key={course._id}>
+              Pay for course
             </button>
           </div>
        </form>

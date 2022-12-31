@@ -198,6 +198,35 @@ const getSortedCourses = async () => {
 }
 
   
+  //pay for a certain course
+  const payForCourse = async (courseData,token) => {
+    const config={
+      headers:{
+         Authorization: `Bearer ${token}`
+     },
+   }
+    
+   const response = await axios.post(API_URL+`common/checkout?courseId=${courseData}`,'',config)
+ 
+   return response.data
+ 
+}
+
+
+
+  //get current progress
+  const  getProgress = async (courseData,token) => {
+    const config={
+      headers:{
+          Authorization: `Bearer ${token}`
+      }
+    }
+    
+    
+    const response = await axios.get(API_URL+`common/getProgress?courseId=${courseData}`,config)
+  
+    return response.data
+  }
 
   
 
@@ -218,7 +247,9 @@ const getSortedCourses = async () => {
     getCourseInfo,
     getCourse,
     getSubTitleExam,
-    getSortedCourses
+    getSortedCourses,
+    payForCourse,
+    getProgress
     
   }
   

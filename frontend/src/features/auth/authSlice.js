@@ -150,6 +150,7 @@ export const authSlice = createSlice({
       state.isError = false
       state.message = ''
       state.emailSuccess=false
+      state.studentEnrolled=''
     },
   },
   extraReducers: (builder) => {

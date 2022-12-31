@@ -1,9 +1,10 @@
 import { useEffect,useRef } from 'react'
-//import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import Spinner from '../components/Spinner'
-import { addEnrolledCourse} from '../features/auth/authSlice'
+import { addEnrolledCourse,reset} from '../features/auth/authSlice'
+import { toast } from 'react-toastify'
+
 
 function PaymentSuccess() {
 
@@ -12,24 +13,23 @@ function PaymentSuccess() {
   console.log(courseId);
 
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const {isLoading, isError,message} = useSelector(
     (state) => state.auth)
 
    const triggered = useRef(false);
-
+   toast.done('Payment Successful')
    
 
     useEffect(() => {
-      if (isError) {
-        toast.error(message)
-      }
+
 
       const hasBeenTriggered = triggered.current
 
 
       if(!hasBeenTriggered){
         dispatch(addEnrolledCourse(courseId))
-      triggered.current=true
+        triggered.current=true
       }
       
     
@@ -42,9 +42,24 @@ function PaymentSuccess() {
   }
 
 
+  const back = (e)=>{
+    e.preventDefault()
+    dispatch(reset())
+    navigate('/mainIndividualTrainee')
+    
+ 
+    
+
+  }
+
+
 
   return (
-    <div>success</div>
+    <div className="form-group">
+            <button type='submit' className='btn btn-block' onClick={back}>
+              Home Page
+            </button>
+          </div>
   )
 }
 

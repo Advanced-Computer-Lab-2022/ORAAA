@@ -19,7 +19,8 @@ const initialState = {
   isLoading: false,
   courseLoading:false,
   message: '',
-  lastRate:''
+  lastRate:'',
+  CurrentProgress:0,
 }
 
 
@@ -255,6 +256,44 @@ export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', asy
 
 
 
+  //pay for a course
+  export const payForCourse = createAsyncThunk('courses/payForCourse', async (coursedata,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await courseService.payForCourse(coursedata.courseId,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+
+
+  //gets Course Progress
+  export const getProgress = createAsyncThunk('courses/getProgress', async (coursedata,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await courseService.getProgress(coursedata,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+
+
   export const courseSlice = createSlice({
     name: 'course',
     initialState,
@@ -272,6 +311,7 @@ export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', asy
       resetOpenedCourse: (state) => {
         state.selectedCourse=null
         state.subTitles=[]
+        state.CurrentProgress=0
       },
 
     },
@@ -451,8 +491,40 @@ export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', asy
             state.isError = true
             state.message = action.payload
           })
+          .addCase(payForCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(payForCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            window.location.href=`${action.payload.url}`
+          })
+          .addCase(payForCourse.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+          .addCase(getProgress.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(getProgress.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.CurrentProgress=action.payload
+          })
+          .addCase(getProgress.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+
+
+
 
           
+
+         
+           
     }
 })
 

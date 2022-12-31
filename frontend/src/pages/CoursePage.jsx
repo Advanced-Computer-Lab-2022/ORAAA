@@ -1,10 +1,10 @@
 import '../sideBar.css'
 import {useSelector} from 'react-redux'
-
+import { toast } from 'react-toastify'
 import Spinner from '../components/Spinner'
-import {RateCourse,getSubTitleExam} from '../features/courses/courseSlice'
+import {RateCourse,getSubTitleExam,getProgress} from '../features/courses/courseSlice'
 import {RateInstructor} from '../features/auth/authSlice'
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import {useDispatch} from 'react-redux'
 
 
@@ -13,9 +13,10 @@ function CoursePage() {
     
     const dispatch = useDispatch()
     
-    const {subTitles,selectedCourse,isLoading,Exams} = useSelector(
+    const {subTitles,selectedCourse,isLoading,Exams,isError,message,CurrentProgress} = useSelector(
         (state) => state.courses
       )
+    
 
       const {RateInstructorIsLoading} = useSelector(
         (state) => state.auth
@@ -30,6 +31,8 @@ function CoursePage() {
       })
 
       const [gotRight, setGotRight]=useState(0)
+      
+      const [count,setCount] = useState(0)
 
       const [selectedSubTitle, setselectedSubTitle]=useState()
 
@@ -40,6 +43,24 @@ function CoursePage() {
       
 
     const {rating,review,instructorRate,instructorReview} = text
+
+
+
+    useEffect(() => {
+    
+      if (isError) {
+        toast.error(message)
+      }
+
+      if(selectedCourse){
+        
+      dispatch(getProgress(selectedCourse._id))
+      }
+  
+   
+     
+  
+  },[isError,message,dispatch,selectedCourse,count])
 
 
       const onChange=(e) =>{
@@ -102,6 +123,11 @@ function CoursePage() {
            <ul>
                 <li>
                 <button type='submit' className='btn btn-block' onClick={main}>
+                       CourseProgress:{CurrentProgress}%
+                     </button>
+                </li>
+                <li>
+                <button type='submit' className='btn btn-block' onClick={main}>
                        Main Page
                      </button>
                 </li>
@@ -113,6 +139,7 @@ function CoursePage() {
                         dispatch(getSubTitleExam(subTitle._id))
                         setSubTitleFlag(true)
                         setGotRight(0)
+                        setCount((prevState)=>prevState+1)
                     
                        }}>
                        {subTitle.subTitleName}
