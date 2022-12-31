@@ -59,7 +59,8 @@ const login = asyncHandler(async(req,res)=>{
         res.json({
             name: NindividualTrainee.userName,
             token: generateToken(NindividualTrainee._id),
-            typee: NindividualTrainee.instance
+            typee: NindividualTrainee.instance,
+            enrolled:NindividualTrainee.inrolledCourses
         })
 
 
@@ -417,6 +418,21 @@ const getSubTitleExam = asyncHandler(async(req,res)=>{
     const subTitleId = req.query.subTitleId;
     
      const NsubTitle = await OsubTitle.findOne({'_id':subTitleId})
+
+     const Ncourse = await Ocourse.findOne({'counter':NsubTitle.counter})
+     const StudentId=req.user.id
+
+     if(Ncourse && StudentId){
+        var subTitleCounter= Number(((await OsubTitle.find({'counter':NsubTitle.counter})).length))
+        const percentage=100/subTitleCounter
+        const NcourseProgress= await OcourseProgress.findOne({$and:[{'studentId':StudentId},{'courseId':Ncourse._id}]})
+        if(NcourseProgress && NcourseProgress.progress!==100){
+        const replace = NcourseProgress
+        replace.progress=replace.progress+percentage
+        await OcourseProgress.findByIdAndUpdate(NcourseProgress._id,replace,{new:true})
+        }
+
+     }
      
      if(NsubTitle){
         const Nexam = await Oexam.find({$and:[{'counter':NsubTitle.counter} ,{'subTitleCounter':NsubTitle.subTitleCounter}]})
@@ -628,14 +644,15 @@ const getProgress = asyncHandler(async(req,res)=>{
     
     const courseId = req.query.courseId
     const _id=req.user.id
-    const NcourseProgress= await OcourseProgress.find({$and:[{'studentId':_id},{'courseId':courseId}]})
-     
+    
+    const NcourseProgress= await OcourseProgress.findOne({$and:[{'studentId':_id},{'courseId':courseId}]})
+
      if(NcourseProgress){
         
-        
+        res.status(200).json(NcourseProgress.progress)
 
     }else{
-        res.status(404)
+        res.status(404) 
         throw new Error('course not found')
     }
 })
