@@ -20,6 +20,7 @@ const initialState = {
   courseLoading:false,
   message: '',
   lastRate:'',
+  cmessage:'',
   CurrentProgress:0,
 }
 
@@ -294,6 +295,32 @@ export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', asy
 
 
 
+  //request access for course
+  export const requestCourse = createAsyncThunk('courses/requestCourse', async (coursedata,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await courseService.requestCourse(coursedata,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+
+
+
+
+
+
+
+
+
   export const courseSlice = createSlice({
     name: 'course',
     initialState,
@@ -307,6 +334,7 @@ export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', asy
         state.isError = false
         state.message = ''
         state.lastRate=''
+        state.cmessage=''
       },
       resetOpenedCourse: (state) => {
         state.selectedCourse=null
@@ -517,13 +545,26 @@ export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', asy
             state.isError = true
             state.message = action.payload
           })
+          .addCase(requestCourse.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(requestCourse.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.cmessage = action.payload
+          })
+          .addCase(requestCourse.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.cmessage = action.payload
+          })
 
 
 
 
           
 
-         
+          
            
     }
 })

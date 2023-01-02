@@ -35,12 +35,17 @@ const individualTraineeSchema= mongoose.Schema({
 
     }, 
     inrolledCourses:{
-        type:[]
+        type:[],
+        default:[]
         
      
     }, instance:{
         type:String,
         default:'individualTrainee'
+    },
+    wallet:{
+        type:Number,
+        default:0
     } 
 
     

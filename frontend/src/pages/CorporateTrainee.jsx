@@ -9,6 +9,7 @@ import {getCourses,reset,resetOpenedCourse } from '../features/courses/courseSli
 import CourseItem from '../components/CourseItem'
 import FilterForm from '../components/FilterForm'
 import MostViewed from '../components/MostViewed'
+import Header from '../components/Header';
 
 
 function CorporateTrainee() {
@@ -17,10 +18,10 @@ function CorporateTrainee() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   
-  const {isLoading,isError, message  } = useSelector(
+  const {isLoading,isError, message } = useSelector(
     (state) => state.instructor
   )
-  const {courses,courseLoading,cisError, cmessage  } = useSelector(
+  const {courses,courseLoading,cisError, cmessage} = useSelector(
     (state) => state.courses
   )
   useEffect(() => {
@@ -30,8 +31,12 @@ function CorporateTrainee() {
     if (cisError) {
       toast.error(cmessage)
     }
+    
+   
+    
 
     dispatch(getCourses())
+    
 
     return () =>{
       dispatch(reset())
@@ -45,17 +50,28 @@ const onClick=(e)=>{
   navigate('/ChangePasswordPage')
 }
 
+const onClickk=(e)=>{
+  e.preventDefault()
+  navigate('/EnrolledCoursesPage')
+}
+
 if (isLoading || courseLoading) {
-  return <Spinner />
+  return <Spinner/>
 }
 
   return (
     <>
+    <Header/>
       <section className='form'>
           <ChooseCountryForm/>
           <div className="form-group">
               <button type='submit' className='btn btn-block' onClick={onClick}>
                  Change password
+              </button>
+          </div>
+          <div className="form-group">
+              <button type='submit' className='btn btn-block' onClick={onClickk}>
+                 EnrolledCourses
               </button>
           </div>
         </section>

@@ -8,7 +8,7 @@ import { getCourses, reset} from '../features/courses/courseSlice'
 import FilterForm from '../components/FilterForm'
 import Header from '../components/Header';
 import MostViewed from '../components/MostViewed'
-import DownloadAsPdf from '../components/DownloadAsPdf'
+
 
 
 function Home() {
@@ -23,7 +23,6 @@ function Home() {
     
       
       dispatch(getCourses())
-      
       
 
       return () => {
@@ -40,7 +39,6 @@ function Home() {
   return (
     <>
     <Header/>
-    <DownloadAsPdf/>
     <section><SelectCountryForm/></section>
       <br></br>
       <FilterForm/>

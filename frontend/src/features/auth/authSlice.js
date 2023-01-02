@@ -20,6 +20,7 @@ const initialState = {
   userLastRateToAnIns:'',
   message: '',
   studentEnrolled:'',
+  Wallet:0
 }
 
 // Register user
@@ -124,6 +125,40 @@ export const changePasswordF = createAsyncThunk('common/changePasswordF', async 
     try {
        const token =  thunkAPI.getState().auth.user.token
        return await authService.addEnrolledCourse(data,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+  //updates the enrolled courses after pay/requsting access
+  export const updateEnrolled = createAsyncThunk('auth/updateEnrolled', async (_,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await authService.updateEnrolled(token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+  //gets wallet
+  export const getWallet = createAsyncThunk('auth/getWallet', async (_,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await authService.getWallet(token)
     } catch (error) {
       const message =
         (error.response &&
@@ -254,6 +289,36 @@ export const authSlice = createSlice({
         state.isError = true
         state.message = action.payload
       })
+      .addCase(updateEnrolled.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(updateEnrolled.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        
+      })
+      .addCase(updateEnrolled.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(getWallet.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getWallet.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        state.Wallet=action.payload
+        
+      })
+      .addCase(getWallet.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+
+
+      
 
       
       

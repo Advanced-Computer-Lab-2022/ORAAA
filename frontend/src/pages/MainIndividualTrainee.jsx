@@ -6,6 +6,7 @@ import { useSelector} from 'react-redux'
 import {useDispatch} from'react-redux'
 import {useNavigate } from 'react-router-dom'
 import {getCourses,reset,resetOpenedCourse } from '../features/courses/courseSlice'
+import { getWallet } from '../features/auth/authSlice'
 import CourseItem from '../components/CourseItem'
 import FilterForm from '../components/FilterForm'
 import MostViewed from '../components/MostViewed'
@@ -30,6 +31,8 @@ function MainIndividualTrainee() {
     }
 
     dispatch(getCourses())
+    
+    
 
     return () =>{
       dispatch(reset())
@@ -42,6 +45,17 @@ function MainIndividualTrainee() {
 const onClick=(e)=>{
   e.preventDefault()
   navigate('/ChangePasswordPage')
+}
+
+const onClickk=(e)=>{
+  e.preventDefault()
+  navigate('/EnrolledCoursesPage')
+}
+
+const onClickkk=(e)=>{
+  e.preventDefault()
+  dispatch(getWallet())
+  navigate('/Wallet')
 }
 
 
@@ -58,6 +72,16 @@ if (isLoading || courseLoading) {
           <div className="form-group">
               <button type='submit' className='btn btn-block' onClick={onClick}>
                  Change password
+              </button>
+          </div>
+          <div className="form-group">
+              <button type='submit' className='btn btn-block' onClick={onClickk}>
+                 EnrolledCourses
+              </button>
+          </div>
+          <div className="form-group">
+              <button type='submit' className='btn btn-block' onClick={onClickkk}>
+                   Wallet
               </button>
           </div>
         </section>

@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+
 const API_URL = '/api/admin/'
 
 
@@ -48,6 +49,25 @@ const createCorporateTrainee = async (userData,token) =>{
     return response.data
   
   }
+
+
+//getRequests
+const getRequests = async (token) =>{
+  const config={
+    headers:{
+        Authorization: `Bearer ${token}`
+    }
+  }
+
+  const response = await axios.get(API_URL+'getRequests',config)
+
+  if(response.data){
+    localStorage.setItem('Adminrequests',JSON.stringify(response.data))
+  }
+
+  return response.data
+
+}
   
   
 
@@ -55,7 +75,8 @@ const createCorporateTrainee = async (userData,token) =>{
 const adminService= {
     createAdmin,
     createInstructor,
-    createCorporateTrainee
+    createCorporateTrainee,
+    getRequests
 
 }
 

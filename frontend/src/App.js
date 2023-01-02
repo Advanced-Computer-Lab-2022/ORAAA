@@ -19,6 +19,8 @@ import ForgotPasswod from './pages/ForgotPasswod';
 import PaymentSuccess from './pages/PaymentSuccess';
 import MostViewed from './components/MostViewed';
 import MostViewedPage from './pages/MostViewedPage'
+import EnrolledCoursesPage from './pages/EnrolledCoursesPage'
+import Wallet from './pages/Wallet'
 function App() {
   
   return (
@@ -45,6 +47,8 @@ function App() {
           <Route path='/PaymentSuccess' element={<PaymentSuccess/>} />
           <Route path='/MostViewed' element={<MostViewed/>} />
           <Route path='/MostViewedPage' element={<MostViewedPage/>} />
+          <Route path='/EnrolledCoursesPage' element={<EnrolledCoursesPage/>} />
+          <Route path='/Wallet' element={<Wallet/>} />
 
        </Routes>
       </div>

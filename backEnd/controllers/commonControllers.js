@@ -11,6 +11,7 @@ const Oexam= require('../models/exam')
 const nodemailer=require('nodemailer')
 const asyncHandler = require('express-async-handler')
 const { strip } = require('colors')
+const Orequests = require('../models/requests')
 const { default: Stripe } = require('stripe')
 
 
@@ -51,7 +52,8 @@ const login = asyncHandler(async(req,res)=>{
         res.json({
             name: NcorporateTrainee.userName,
             token: generateToken(NcorporateTrainee._id),
-            typee: NcorporateTrainee.instance
+            typee: NcorporateTrainee.instance,
+            enrolled:NcorporateTrainee.inrolledCourses?NcorporateTrainee.inrolledCourses:[]
         })
 
 
@@ -60,7 +62,7 @@ const login = asyncHandler(async(req,res)=>{
             name: NindividualTrainee.userName,
             token: generateToken(NindividualTrainee._id),
             typee: NindividualTrainee.instance,
-            enrolled:NindividualTrainee.inrolledCourses
+            enrolled:NindividualTrainee.inrolledCourses.length? NindividualTrainee.inrolledCourses:[]
         })
 
 
@@ -585,27 +587,41 @@ const changePasswordF = asyncHandler(async (req, res) => {
 //@access private
 const addEnrolledCourse = asyncHandler(async(req,res)=>{
 
-    const {courseId} = req.body
+    const {courseId,studentId} = req.body
     const userId=req.user.id
-    console.log(courseId)
-    console.log(userId)
+   
     let flag
     let Ncourse
     if(courseId){
         Ncourse = await Ocourse.findById(courseId)
     }
     if(userId){
-    var NcorporateTrainee = await OcorporateTrainee.findOne({userId})
-    var NindividualTrainee = await OindividualTrainee.findOne({userId})
+    var NindividualTrainee = await OindividualTrainee.findOne({'_id':userId})
     }
-     
+    if(studentId!==''){
+     var NcorporateTrainee = await OcorporateTrainee.findOne({'_id':studentId})
+    }
 
+     
+    
     if(NindividualTrainee){
         flag =  NindividualTrainee.inrolledCourses.includes(`${courseId}`)
     }
+
+    if(NcorporateTrainee){
+        flag =  NcorporateTrainee.inrolledCourses.includes(`${courseId}`)
+    }
      
     if(!flag){
-    if(userId && courseId){
+    if(studentId!=='' && courseId){
+        await OcourseProgress.create({
+            studentId,
+            courseId
+        })
+
+        await Orequests.findOneAndRemove({$and:[{'studentId':studentId},{'courseId':courseId}]})
+
+    }else if(userId && courseId){
         const studentId=userId  
         await OcourseProgress.create({
             studentId,
@@ -619,10 +635,11 @@ const addEnrolledCourse = asyncHandler(async(req,res)=>{
         NindividualTrainee= await OindividualTrainee.findByIdAndUpdate(userId,replace,{new:true})
         res.status(200).json('Done')
      }else if(Ncourse && NcorporateTrainee){
-        const replace = await OcorporateTrainee.findById(userId)
+        const replace = await OcorporateTrainee.findById(studentId)
         replace.inrolledCourses.push(courseId)
-        NcorporateTrainee= await OcorporateTrainee.findByIdAndUpdate(userId,replace,{new:true})
-        res.status(200).json('Done')
+        NcorporateTrainee= await OcorporateTrainee.findByIdAndUpdate(studentId,replace,{new:true})
+        const Nrequests=await Orequests.find()
+        res.status(200).json(Nrequests)
     }else{
         res.status(404)
         throw new Error('Not a student')
@@ -636,7 +653,7 @@ const addEnrolledCourse = asyncHandler(async(req,res)=>{
 
 
 
-//!!!!not complete 
+
 //@desc  getting a student progress for a certain course
 //@route get /api/common/getProgress
 //@access private
@@ -722,12 +739,114 @@ if(Ncourse){
 
 
 
+//@desc  updateEnrolled
+//@route POST /api/common/updateEnrolled
+//@access private
+const updateEnrolled = asyncHandler(async(req,res)=>{
+    const userId=req.user.id
+    
+
+    const NcorporateTrainee = await OcorporateTrainee.findOne({'_id':userId})
+    const NindividualTrainee = await OindividualTrainee.findOne({'_id':userId})
+      
+   if(NcorporateTrainee){
+        res.json({
+           enrolled:NindividualTrainee.inrolledCourses
+        })
+
+
+    }else if(NindividualTrainee){
+        res.json({
+            enrolled:NindividualTrainee.inrolledCourses
+        })
+
+
+    }else{
+        res.status(400)
+        throw new Error('user not found')
+    }
+})
+
+
+
+//@desc  req access
+//@route PUT /api/common/requestCourse
+//@access private
+const requestCourse = asyncHandler(async(req,res)=>{
+    const userId=req.user.id
+    const courseId = req.query.courseId;
+    const {type} = req.body
+    console.log(type)
+    const NcorporateTrainee = await OcorporateTrainee.findOne({'_id':userId})
+    const NindividualTrainee = await OindividualTrainee.findOne({'_id':userId})
+    const Ncourse =  await Ocourse.findOne({'_id':courseId})
+      
+   if(NcorporateTrainee && Ncourse){
+    
+    const studentId=userId
+    const studentName=NcorporateTrainee.userName
+    const courseTitle = Ncourse.title
+    const Nrequests = await Orequests.findOne({$and:[{'studentId':studentId},{'courseId':courseId}]})
+    if(!Nrequests){
+    await Orequests.create({
+        studentId,
+        courseId,
+        studentName,
+        courseTitle,
+        type
+
+    })
+   } 
+
+    res.status(201).json('request Pending')
+   }else if(NindividualTrainee && Ncourse){
+    const NcourseProgress = await OcourseProgress.findOne({$and:[{'studentId':userId},{'courseId':courseId}]})
+    if(NcourseProgress.progress>50){
+        res.status(400).json('You cant refund after finishing 50% of the course')
+    }
+    const studentId=userId
+    const studentName=NindividualTrainee.userName
+    const courseTitle = Ncourse.title
+    const Nrequests = await Orequests.findOne({$and:[{'studentId':studentId},{'courseId':courseId}]})
+    if(!Nrequests){
+    await Orequests.create({
+        studentId,
+        courseId,
+        studentName,
+        courseTitle,
+        type
+
+    })
+   } 
+
+    res.status(201).json('request Pending')
+
+   }else{
+    res.status(400).json('request failed')
+   }
+
+})
 
 
 
 
 
+//@desc  getWallet 
+//@route GET /api/common/requestCourse
+//@access private
+const getWallet = asyncHandler(async(req,res)=>{
+    const userId=req.user.id
+    
+    const NindividualTrainee = await OindividualTrainee.findOne({'_id':userId})
+  
+      
+     if(NindividualTrainee){
+        res.status(200).json(NindividualTrainee.wallet)
+     }else{
+        res.status(400).json('cant find user wallet')
+     }
 
+})
 
 
 
@@ -758,6 +877,9 @@ module.exports={
     getProgress,
     checkout,
     addEnrolledCourse,
-    getSortedCourses
+    getSortedCourses,
+    updateEnrolled,
+    requestCourse,
+    getWallet
 
 }

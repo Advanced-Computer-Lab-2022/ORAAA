@@ -228,6 +228,26 @@ const getSortedCourses = async () => {
     return response.data
   }
 
+
+  //request access
+ const requestCourse = async (data,token) => {
+  const config={
+    headers:{
+       Authorization: `Bearer ${token}`
+   },
+ }
+
+ const Data = {
+   type:data.type
+ }
+
+
+ const response = await axios.put(`/api/common/requestCourse?courseId=${data.courseId}`,Data,config)
+ 
+ return response.data
+
+}
+
   
 
  
@@ -249,7 +269,8 @@ const getSortedCourses = async () => {
     getSubTitleExam,
     getSortedCourses,
     payForCourse,
-    getProgress
+    getProgress,
+    requestCourse
     
   }
   

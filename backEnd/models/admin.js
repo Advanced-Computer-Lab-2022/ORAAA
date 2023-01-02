@@ -13,7 +13,7 @@ const adminSchema= mongoose.Schema({
     instance:{
         type:String,
         default:'admin'
-    } 
+    },
 },
     {
         timestamps:true

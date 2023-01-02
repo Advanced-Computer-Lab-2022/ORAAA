@@ -96,11 +96,18 @@ const login = async (userData) => {
    },
  }
 
- const courseId ={
-  courseId:Data
+ const data ={
+  courseId:Data.courseId,
+  studentId:Data.studentId?Data.studentId:'',
  }
 
- const response = await axios.put('api/common/addEnrolledCourse',courseId,config)
+ const response = await axios.put('api/common/addEnrolledCourse',data,config)
+
+ if(Data.studentId!=='' && response.data){
+  localStorage.removeItem('Adminrequests')
+  localStorage.setItem('Adminrequests', JSON.stringify(response.data)) 
+  window.location.reload();
+ }
 
  
  return response.data
@@ -109,7 +116,48 @@ const login = async (userData) => {
 
 
 
+
+//updates the enrolled courses after pay/requsting access
+ const updateEnrolled = async (token) => {
+
+  const config={
+    headers:{
+       Authorization: `Bearer ${token}`
+   },
+ }
+
+ const response = await axios.get('api/common/updateEnrolled',config)
+
+ if(response.data){
+  const user = JSON.parse(localStorage.getItem('user'))
+  user.enrolled = response.data.enrolled
+  localStorage.removeItem('user')
+  localStorage.setItem('user', JSON.stringify(user)) 
+  window.location.reload();
+ }
+ 
+ return response.data
+
+}
+
+
+
+
   
+//get wallet
+const getWallet = async (token) => {
+
+  const config={
+    headers:{
+       Authorization: `Bearer ${token}`
+   },
+ }
+
+ const response = await axios.get('api/common/getWallet',config)
+ 
+ return response.data
+
+}
 
 
 
@@ -132,7 +180,9 @@ const authService = {
   RateInstructor,
   forgotPassword,
   changePasswordF,
-  addEnrolledCourse
+  addEnrolledCourse,
+  updateEnrolled,
+  getWallet
 }
 
 export default authService

@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useSelector,useDispatch} from 'react-redux'
 import { toast } from 'react-toastify'
-import {getCourseInfo,getCourse,payForCourse,getProgress} from '../features/courses/courseSlice'
+import {getCourseInfo,getCourse,payForCourse,getProgress,requestCourse} from '../features/courses/courseSlice'
 import Spinner from '../components/Spinner'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -29,9 +29,7 @@ function CourseItem({ course }) {
     if (isError) {
       toast.error(message)
     }
-
  
-   
 
 },[isError,message])
 
@@ -73,6 +71,26 @@ function CourseItem({ course }) {
 
   }
 
+  const reqAccess = (e) =>{
+    e.preventDefault()
+    const Id={
+      courseId:course._id,
+      type:'access'
+   }
+    dispatch(requestCourse(Id))
+  }
+
+  const refund = (e) =>{
+    e.preventDefault()
+    const Id={
+      courseId:course._id,
+      type:'refund'
+   }
+    dispatch(requestCourse(Id))
+  }
+
+
+
   if (isLoading) {
     return <Spinner />
   }
@@ -100,16 +118,31 @@ function CourseItem({ course }) {
          )}
          {user && userType!=='instructor' && (
        <form>
-          <div className="form-group">
+           {user.enrolled.includes(course._id) ? (
+            <div className="form-group">
             <button type='submit' className='btn btn-block' onClick={open} key={course._id}>
               open Course
             </button>
-          </div>
-          <div className="form-group">
-            <button type='submit' className='btn btn-block' onClick={pay} key={course._id}>
-              Pay for course
+            {user && userType==='individualTrainee' && (
+            <button type='submit' className='btn btn-block' onClick={refund} key={course._id}>
+              Refund
             </button>
-          </div>
+            )}
+            </div>            
+           ):(
+            <div className="form-group">
+            {user && userType==='individualTrainee' ? (  
+              <button type='submit' className='btn btn-block' onClick={pay} key={course._id}>
+                 Pay for course
+              </button>
+            ) : (
+              <button type='submit' className='btn btn-block' onClick={reqAccess} key={course._id}>
+                Request Access
+              </button>
+            )
+            }
+            </div>
+           )}
        </form>
        )}
       </div>

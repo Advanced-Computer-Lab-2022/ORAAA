@@ -38,12 +38,12 @@ const styles = StyleSheet.create({
     },
   });
 
-const MyDoc = ({udata,data}) => (
+const MyDoc = ({notes}) => (
   <Document>
     <Page style={styles.body}>
-      <Text style={styles.header} fixed>{data.title} Certificate</Text>
+      <Text style={styles.header} fixed>Notes</Text>
       <Text style={styles.text}>
-        Congratulations {udata.name}!!! you Have completed this course successfuly with a certficate from Oraaa.
+         {notes}
       </Text>
       <Text
           style={styles.pageNumber}
@@ -58,14 +58,14 @@ const MyDoc = ({udata,data}) => (
 
 
 
-function DownloadAsPdf({data,udata}) {
+function DownloadNotes({notes}) {
   return (
     <div>
-      <PDFDownloadLink document={<MyDoc udata={udata} data={data} />} fileName="somename.pdf">
-      {({ blob, url, loading, error }) => (loading ? 'Loading document...' : <button type='submit' className='btn btn-block'>Certificate</button>)}
+      <PDFDownloadLink document={<MyDoc notes={notes}  />} fileName="somename.pdf">
+      {({ blob, url, loading, error }) => (loading ? 'Loading document...' : <button type='submit' className='btn btn-block'>Download Notes</button>)}
     </PDFDownloadLink>
     </div>
   );
 }
 
-export default DownloadAsPdf;
+export default DownloadNotes;

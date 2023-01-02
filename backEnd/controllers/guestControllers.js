@@ -126,7 +126,8 @@ const signup = asyncHandler(async (req, res) => {
         _id: NindividualTrainee.id,
         name: NindividualTrainee.userName,
         email: NindividualTrainee.email,
-        token: generateToken(NindividualTrainee._id)
+        token: generateToken(NindividualTrainee._id),
+        enrolled:NindividualTrainee.inrolledCourses.length? NindividualTrainee.inrolledCourses:[]
       })
     } else {
       res.status(400)

@@ -5,6 +5,7 @@ const asyncHandler=require('express-async-handler')
 const Oinstructor =require('../models/instructor')
 const Oadmin=require('../models/admin')
 const OcorporateTrainee=require('../models/corporateTrainee')
+const Orequests = require('../models/requests')
 
 //@desc  admin adds an instructor
 //@route POST /api/admin/addInstructor
@@ -137,9 +138,26 @@ const addCorporateTrainee= asyncHandler(async(req,res)=>{
 })
 
 
+//@desc  get requests
+//@route GET /api/admin/getRequests
+//@access private
+const getRequests= asyncHandler(async(req,res)=>{
+   
+     const Nrequests = await Orequests.find()
+     console.log(Nrequests)
+     if(Nrequests){
+        res.status(200).json(Nrequests)
+     }else{
+        res.status(400).json('No req found')
+     }
+
+   
+})
+
+
 
 
 
 module.exports={
-    addInstructor,addAdmin,addCorporateTrainee
+    addInstructor,addAdmin,addCorporateTrainee,getRequests
 }

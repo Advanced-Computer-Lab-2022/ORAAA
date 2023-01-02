@@ -6,19 +6,29 @@ import {RateCourse,getSubTitleExam,getProgress} from '../features/courses/course
 import {RateInstructor} from '../features/auth/authSlice'
 import {useState,useEffect} from 'react';
 import {useDispatch} from 'react-redux'
+import DownloadAsPdf from '../components/DownloadAsPdf'
+import DownloadNotes from '../components/DownloadNotes'
 
 
 function CoursePage() {
 
     
     const dispatch = useDispatch()
+
+    const [formData, setFormData] = useState({
+      notes: '',
+    })
+
+    const {notes} = formData
+
+  
     
     const {subTitles,selectedCourse,isLoading,Exams,isError,message,CurrentProgress} = useSelector(
         (state) => state.courses
       )
     
 
-      const {RateInstructorIsLoading} = useSelector(
+      const {user,RateInstructorIsLoading} = useSelector(
         (state) => state.auth
       )  
 
@@ -62,9 +72,17 @@ function CoursePage() {
   
   },[isError,message,dispatch,selectedCourse,count])
 
-
+       
       const onChange=(e) =>{
         setValue((prevState)=>({
+          ...prevState,
+          [e.target.name]:e.target.value
+      
+        }))
+      }
+
+      const onChangee=(e) =>{
+        setFormData((prevState)=>({
           ...prevState,
           [e.target.name]:e.target.value
       
@@ -140,6 +158,9 @@ function CoursePage() {
                         setSubTitleFlag(true)
                         setGotRight(0)
                         setCount((prevState)=>prevState+1)
+                        setFormData({
+                          notes:''
+                        })
                     
                        }}>
                        {subTitle.subTitleName}
@@ -147,7 +168,12 @@ function CoursePage() {
                        subTitleHours: {subTitle.subTitleHours}
                      </button>
                      ))}
+                </li>
+               {CurrentProgress===100 && 
+                <li>
+                <DownloadAsPdf udata={user} data={selectedCourse}/>
                 </li>    
+               }
             </ul>
         </div>
 
@@ -223,6 +249,20 @@ function CoursePage() {
        <iframe title="subTitleVideo" width="500" height="320" src={selectedSubTitle.link}>
        </iframe>
       </div>
+       <div className='form-group'>
+          <input
+            type='text'
+            className='form-control'
+            id='notes'
+            name='notes'
+            value={notes}
+            placeholder='Add notes'
+            onChange={onChangee}
+          />
+        </div>
+        <div className='form-group'>
+        <DownloadNotes notes={notes}/>
+        </div>
          {Exams.map((exam) => (
                   <div className="form-group">
                       <div className='radio'>

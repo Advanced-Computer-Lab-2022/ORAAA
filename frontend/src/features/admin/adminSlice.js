@@ -1,8 +1,11 @@
 import {createSlice,createAsyncThunk} from '@reduxjs/toolkit'
 import adminService from './adminService'
 
+
+const Adminrequests = JSON.parse(localStorage.getItem('Adminrequests'))
 const initialState = {
     adminCreated:'',
+    Adminrequests:Adminrequests?Adminrequests:[],
     isError: false,
     isSuccess: false,
     isLoading: false,
@@ -44,6 +47,22 @@ const initialState = {
     try {
         const token =  thunkAPI.getState().auth.user.token
         return await adminService.createCorporateTrainee(userData,token)
+      } catch (error) {
+        const message =
+          (error.response && error.response.data && error.response.data.message) ||
+          error.message ||
+          error.toString()
+        return thunkAPI.rejectWithValue(message)
+      }
+
+  })
+
+
+  //get requests
+  export const getRequests = createAsyncThunk('admin/getRequests',async(_,thunkAPI)=>{
+    try {
+        const token =  thunkAPI.getState().auth.user.token
+        return await adminService.getRequests(token)
       } catch (error) {
         const message =
           (error.response && error.response.data && error.response.data.message) ||
@@ -100,6 +119,20 @@ const initialState = {
             state.admin = action.payload
           })
           .addCase(createCorporateTrainee.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+            
+          })
+          .addCase(getRequests.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(getRequests.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            state.Adminrequests = action.payload
+          })
+          .addCase(getRequests.rejected, (state, action) => {
             state.isLoading = false
             state.isError = true
             state.message = action.payload
