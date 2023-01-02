@@ -18,6 +18,7 @@ const { default: Stripe } = require('stripe')
 
 
 
+
 //@desc  login
 //@route POST /api/common/Login
 //@access public
@@ -527,6 +528,76 @@ const forgotPassword = asyncHandler(async(req,res)=>{
 
 })
 
+
+
+//@desc  receive mail certificate
+//@route post /api/common/sendEmail
+//@access private
+const sendEmail = asyncHandler(async(req,res)=>{
+    console.log('hi')
+    const _id = req.user.id
+    var flag2=false
+    var flag3=false
+    let email
+   
+    const NcorporateTrainee = await OcorporateTrainee.findOne({'_id':_id})
+    const NindividualTrainee = await OindividualTrainee.findOne({'_id':_id})
+    const transporter = nodemailer. createTransport({
+        service:'gmail',
+        auth: {
+        user: `${process.env.EMAIL}`,
+        pass:`${process.env.PASSWORD}`
+       }
+    })
+    console.log(`${process.env.EMAIL}`)
+    console.log(`${process.env.PASSWORD}`)
+    if(NcorporateTrainee){
+        flag2=true
+        email=NcorporateTrainee.email
+
+    }else if(NindividualTrainee ){
+        flag3=true
+        email=NindividualTrainee.email
+    }
+
+    if( flag2 || flag3){
+        const mailOptions = {
+            from:'oraaa30@gmail.com', 
+            to:email ,
+            subject: 'Certificate',
+             text:`You are receiving this because you have completed a course. \n\n`+
+            
+            `Congrats on completing the course this email is to let you know that you can/n/n`+
+            `now download the PDF of the Certificate via our website`
+            
+        }
+
+
+        transporter.sendMail(mailOptions, function (err, response) {
+            if (err) {
+            console.error ('there was an error: ', err);
+            } else {
+            console. log( 'here is the res: ', response);
+            }
+          })
+
+         if(flag2){
+            res.status(200).json(NcorporateTrainee._id)
+          }else{
+            res.status(200).json(NindividualTrainee._id)
+          }
+    
+    }else{
+        res.status(400)
+        throw new Error('Invalid userName')
+    }
+
+
+    
+    
+
+})
+
 // @desc    user changes his password
 // @route   PUT /api/common/changePassword
 // @access  Private
@@ -650,7 +721,35 @@ const addEnrolledCourse = asyncHandler(async(req,res)=>{
 })
   
 
+//@desc  refund
+//@route PUT /api/common/refund
+//@access private
+const refund = asyncHandler(async(req,res)=>{
+    console.log('hi')
+    const {courseId,studentId} = req.body
 
+    let Ncourse
+    if(courseId){
+        Ncourse = await Ocourse.findById(courseId)
+    }
+    if(studentId){
+    var NindividualTrainee = await OindividualTrainee.findOne({'_id':studentId})
+    }
+   
+     
+     if(Ncourse && NindividualTrainee){
+        await Orequests.findOneAndRemove({$and:[{'studentId':studentId},{'courseId':courseId}]})
+        const replace = await OindividualTrainee.findOne({'_id':studentId})
+        replace.wallet=replace.wallet+Ncourse.price
+        NindividualTrainee= await OindividualTrainee.findByIdAndUpdate(studentId,replace,{new:true})
+        const Nrequests=await Orequests.find()
+        res.status(200).json(Nrequests)
+     }else{
+        res.status(404)
+        throw new Error('Not a student')
+    }
+
+})
 
 
 
@@ -880,6 +979,8 @@ module.exports={
     getSortedCourses,
     updateEnrolled,
     requestCourse,
-    getWallet
+    getWallet,
+    sendEmail,
+    refund
 
 }

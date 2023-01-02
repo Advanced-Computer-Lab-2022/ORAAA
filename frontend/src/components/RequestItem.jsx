@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector} from 'react-redux'
 import Spinner from '../components/Spinner'
 import { useDispatch } from "react-redux"
-import { addEnrolledCourse } from '../features/auth/authSlice'
+import { addEnrolledCourse,refund } from '../features/auth/authSlice'
 function RequestItem({request}) {
 
     const dispatch =useDispatch()
@@ -15,7 +15,11 @@ function RequestItem({request}) {
             courseId:request.courseId,
             studentId:request.studentId
         }
+        if(request.type==='access'){
         dispatch(addEnrolledCourse(data))
+        }else{
+          dispatch(refund(data))
+        }
 
    
     }

@@ -115,6 +115,36 @@ const login = async (userData) => {
 }
 
 
+//refund 
+const refund = async (Data,token) => {
+
+  const config={
+    headers:{
+       Authorization: `Bearer ${token}`
+   },
+ }
+
+ const data ={
+  courseId:Data.courseId,
+  studentId:Data.studentId?Data.studentId:'',
+ }
+
+ const response = await axios.put('api/common/refund',data,config)
+
+ if(Data.studentId!=='' && response.data!=='Done'){
+    localStorage.removeItem('Adminrequests')
+    localStorage.setItem('Adminrequests', JSON.stringify(response.data)) 
+    window.location.reload();
+ }
+
+ 
+ return response.data
+
+}
+
+
+
+
 
 
 //updates the enrolled courses after pay/requsting access
@@ -160,6 +190,23 @@ const getWallet = async (token) => {
 }
 
 
+//send email
+ const sendEmail = async (token) => {
+
+  const config={
+    headers:{
+       Authorization: `Bearer ${token}`
+   },
+ }
+
+ const response = await axios.post('api/common/sendEmail','',config)
+ 
+ return response.data
+
+}
+
+
+
 
 
 
@@ -183,7 +230,9 @@ const authService = {
   changePasswordF,
   addEnrolledCourse,
   updateEnrolled,
-  getWallet
+  getWallet,
+  sendEmail,
+  refund
 }
 
 export default authService

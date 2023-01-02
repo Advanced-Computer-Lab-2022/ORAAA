@@ -1,5 +1,8 @@
 import React from 'react';
 import { PDFDownloadLink, Page, Text, Document, StyleSheet } from '@react-pdf/renderer';
+import { useDispatch ,useSelector} from 'react-redux';
+import { sendEmail } from '../features/auth/authSlice'; 
+import Spinner from '../components/Spinner'
 
 const styles = StyleSheet.create({
     body: {
@@ -59,12 +62,29 @@ const MyDoc = ({udata,data}) => (
 
 
 function DownloadAsPdf({data,udata}) {
+  const { isLoading } = useSelector(
+    (state) => state.auth)
+  const dispatch = useDispatch()  
+
+
+  if (isLoading) {
+    return <Spinner/>
+  }
+  
   return (
+    
     <div>
       <PDFDownloadLink document={<MyDoc udata={udata} data={data} />} fileName="somename.pdf">
       {({ blob, url, loading, error }) => (loading ? 'Loading document...' : <button type='submit' className='btn btn-block'>Certificate</button>)}
     </PDFDownloadLink>
+    <PDFDownloadLink document={<MyDoc udata={udata} data={data} />} fileName="somename.pdf">
+      {({ blob, url, loading, error }) => (loading ? 'Loading document...' : <button type='submit' className='btn btn-block' onClick={(e)=>{
+        e.preventDefault()
+        dispatch(sendEmail())
+      }}>Recieve notification via email</button>)}
+    </PDFDownloadLink>
     </div>
+    
   );
 }
 

@@ -104,6 +104,23 @@ export const forgotPassword = createAsyncThunk('auth/reset', async (userName,thu
 }
 )
 
+//send email
+export const sendEmail = createAsyncThunk('auth/sendEmail', async (_,thunkAPI) => {
+  try {
+    const token =  thunkAPI.getState().auth.user.token
+     return await authService.sendEmail(token)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
+)
+
 //Change password
 export const changePasswordF = createAsyncThunk('common/changePasswordF', async (data, thunkAPI) => {
   try {
@@ -125,6 +142,23 @@ export const changePasswordF = createAsyncThunk('common/changePasswordF', async 
     try {
        const token =  thunkAPI.getState().auth.user.token
        return await authService.addEnrolledCourse(data,token)
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString()
+      return thunkAPI.rejectWithValue(message)
+    }
+  }
+)
+
+//refund
+  export const refund = createAsyncThunk('auth/refund', async (data,thunkAPI) => {
+    try {
+       const token =  thunkAPI.getState().auth.user.token
+       return await authService.refund(data,token)
     } catch (error) {
       const message =
         (error.response &&
@@ -312,6 +346,32 @@ export const authSlice = createSlice({
         
       })
       .addCase(getWallet.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(sendEmail.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(sendEmail.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.emailSuccess = true
+        
+      })
+      .addCase(sendEmail.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.message = action.payload
+      })
+      .addCase(refund.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(refund.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isSuccess = true
+        
+      })
+      .addCase(refund.rejected, (state, action) => {
         state.isLoading = false
         state.isError = true
         state.message = action.payload
