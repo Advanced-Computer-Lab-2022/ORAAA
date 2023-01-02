@@ -313,6 +313,25 @@ export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', asy
 )
 
 
+//addreport
+export const addreport = createAsyncThunk('courses/addreport', async (data,thunkAPI) => {
+  try {
+     const token =  thunkAPI.getState().auth.user.token
+     return await courseService.addreport(data,token)
+  } catch (error) {
+    const message =
+      (error.response &&
+        error.response.data &&
+        error.response.data.message) ||
+      error.message ||
+      error.toString()
+    return thunkAPI.rejectWithValue(message)
+  }
+}
+)
+
+
+
 
 
 
@@ -558,6 +577,20 @@ export const getSortedCourses = createAsyncThunk('courses/getSortedCourses', asy
             state.isError = true
             state.cmessage = action.payload
           })
+          .addCase(addreport.pending, (state) => {
+            state.isLoading = true
+          })
+          .addCase(addreport.fulfilled, (state, action) => {
+            state.isLoading = false
+            state.isSuccess = true
+            
+          })
+          .addCase(addreport.rejected, (state, action) => {
+            state.isLoading = false
+            state.isError = true
+            state.message = action.payload
+          })
+
 
 
 

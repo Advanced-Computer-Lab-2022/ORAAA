@@ -249,7 +249,24 @@ const getSortedCourses = async () => {
 }
 
   
+  //addreport
+  const addreport = async (data,token) => {
+    const config={
+      headers:{
+         Authorization: `Bearer ${token}`
+     },
+   }
 
+   const Data = {
+    body:data.body,
+    type:data.type
+   }
+    
+   const response = await axios.post(API_URL+`common/addreport?courseId=${data.courseId}`,Data,config)
+ 
+   return response.data
+ 
+}
  
 
 
@@ -270,7 +287,8 @@ const getSortedCourses = async () => {
     getSortedCourses,
     payForCourse,
     getProgress,
-    requestCourse
+    requestCourse,
+    addreport
     
   }
   

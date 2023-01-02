@@ -12,6 +12,7 @@ const nodemailer=require('nodemailer')
 const asyncHandler = require('express-async-handler')
 const { strip } = require('colors')
 const Orequests = require('../models/requests')
+const Oreports = require('../models/reports')
 const { default: Stripe } = require('stripe')
 
 
@@ -948,6 +949,37 @@ const getWallet = asyncHandler(async(req,res)=>{
 })
 
 
+//@desc  adds addreport
+//@route POST /api/common/addreport
+//@access private
+const addreport = asyncHandler(async(req,res)=>{
+    
+    const {body,type} = req.body
+    const userId=req.user.id
+    const courseId=req.query.courseId
+
+    let Ncourse
+    if(courseId){
+        Ncourse = await Ocourse.findById(courseId)
+    }
+     
+    
+    if(Ncourse && body && type){
+        await Oreports.create({
+            courseId,
+            userId,
+            type,
+            body 
+        })
+        res.status(201).json('done')
+    }else{
+       res.status('400').json('not done')
+    }
+    
+     
+})
+
+
 
 
 // Generate JWT
@@ -981,6 +1013,7 @@ module.exports={
     requestCourse,
     getWallet,
     sendEmail,
-    refund
+    refund,
+    addreport
 
 }

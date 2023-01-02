@@ -1,6 +1,6 @@
 const express = require('express')
 const router=express.Router()
-const {login,selectCountry,viewCourses,filterCourses,searchForCourses,chooseCourseToView,rateCourses,rateInstructor,changePassword,getCourseInfo,getCourse,getSubTitleExam,forgotPassword,changePasswordF,getProgress,checkout,addEnrolledCourse,updateEnrolled,requestCourse,getWallet,sendEmail,refund}=require('../controllers/commonControllers')
+const {login,selectCountry,viewCourses,filterCourses,searchForCourses,chooseCourseToView,rateCourses,rateInstructor,changePassword,getCourseInfo,getCourse,getSubTitleExam,forgotPassword,changePasswordF,getProgress,checkout,addEnrolledCourse,updateEnrolled,requestCourse,getWallet,sendEmail,refund,addreport}=require('../controllers/commonControllers')
 const {protect} = require('../middleWare/authMiddleware')
 
 
@@ -27,6 +27,7 @@ router.put('/requestCourse',protect,requestCourse)
 router.get('/getWallet',protect,getWallet)
 router.post('/sendEmail',protect,sendEmail)
 router.put('/refund',protect,refund)
+router.post('/addreport',protect,addreport)
 
 
 module.exports=router

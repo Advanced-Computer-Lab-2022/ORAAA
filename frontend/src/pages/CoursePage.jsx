@@ -2,7 +2,7 @@ import '../sideBar.css'
 import {useSelector} from 'react-redux'
 import { toast } from 'react-toastify'
 import Spinner from '../components/Spinner'
-import {RateCourse,getSubTitleExam,getProgress} from '../features/courses/courseSlice'
+import {RateCourse,getSubTitleExam,getProgress,addreport} from '../features/courses/courseSlice'
 import {RateInstructor} from '../features/auth/authSlice'
 import {useState,useEffect} from 'react';
 import {useDispatch} from 'react-redux'
@@ -10,9 +10,10 @@ import DownloadAsPdf from '../components/DownloadAsPdf'
 import DownloadNotes from '../components/DownloadNotes'
 
 
+
 function CoursePage() {
 
-    
+    const [userType,setUserType]=useState();
     const dispatch = useDispatch()
 
     const [formData, setFormData] = useState({
@@ -36,7 +37,9 @@ function CoursePage() {
          rating:'',
          review:'',
          instructorRate:'',
-         instructorReview:''
+         instructorReview:'',
+         body:'',
+         
 
       })
 
@@ -52,7 +55,7 @@ function CoursePage() {
 
       
 
-    const {rating,review,instructorRate,instructorReview} = text
+    const {rating,review,instructorRate,instructorReview,body} = text
 
 
 
@@ -118,6 +121,17 @@ function CoursePage() {
   const main = (e) =>{
     e.preventDefault()
     setSubTitleFlag(false)
+  }
+
+  const onSubmit =(e)=>{
+    e.preventDefault()
+    const data = {
+      courseId:selectedCourse._id,
+      body:body,
+      type:userType
+    }
+    dispatch(addreport(data))
+
   }
 
 
@@ -238,7 +252,33 @@ function CoursePage() {
                      Rate Instructor
                 </button>
           </div>
+          <h2>Add Report:</h2>
+          <form onSubmit={onSubmit}>
+          <div className="form-group">
+         <label htmlFor="text"></label>
+         <input type="text" 
+              name='body' 
+              id='body' 
+              value={body}
+              placeholder='write down your problem'
+             onChange={onChange}/>
+      </div>
+      <div className='radio'>
+         <h1>{userType}</h1>
+          <input type="radio" name="userType" value="Technical" onChange={e=>setUserType(e.target.value)} /> Technical
+          <input type="radio" name="userType" value="Financial" onChange={e=>setUserType(e.target.value)} /> Financial
+          <input type="radio" name="userType" value="other" onChange={e=>setUserType(e.target.value)} /> other
+         </div>
+      <div className="form-group">
+         <button type='submit' className='btn btn-block'>
+           Report
+         </button>
+       </div>
+     </form>
     </section>
+     
+   
+
    ):
    (
     <section className='form'>
