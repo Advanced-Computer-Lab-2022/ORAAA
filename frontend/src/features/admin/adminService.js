@@ -62,6 +62,7 @@ const getRequests = async (token) =>{
   const response = await axios.get(API_URL+'getRequests',config)
 
   if(response.data){
+    localStorage.removeItem('Adminrequests')
     localStorage.setItem('Adminrequests',JSON.stringify(response.data))
   }
 

@@ -24,6 +24,7 @@ function Home() {
       
       dispatch(getCourses())
       
+      
 
       return () => {
         dispatch(reset())

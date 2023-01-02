@@ -103,10 +103,10 @@ const login = async (userData) => {
 
  const response = await axios.put('api/common/addEnrolledCourse',data,config)
 
- if(Data.studentId!=='' && response.data){
-  localStorage.removeItem('Adminrequests')
-  localStorage.setItem('Adminrequests', JSON.stringify(response.data)) 
-  window.location.reload();
+ if(Data.studentId!=='' && response.data!=='Done'){
+    localStorage.removeItem('Adminrequests')
+    localStorage.setItem('Adminrequests', JSON.stringify(response.data)) 
+    window.location.reload();
  }
 
  
@@ -170,6 +170,7 @@ const getWallet = async (token) => {
 const logout = () => {
   localStorage.removeItem('user')
   localStorage.removeItem('InstructorAcc')
+  localStorage.removeItem('Adminrequests')
 }
 
 const authService = {

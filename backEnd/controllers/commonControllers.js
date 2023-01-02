@@ -586,7 +586,7 @@ const changePasswordF = asyncHandler(async (req, res) => {
 //@route PUT /api/common/addEnrolledCourse
 //@access private
 const addEnrolledCourse = asyncHandler(async(req,res)=>{
-
+    console.log('hi')
     const {courseId,studentId} = req.body
     const userId=req.user.id
    
