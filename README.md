@@ -112,7 +112,7 @@ const login = asyncHandler(async(req,res)=>{
 })
 ```
 This is how your Postman window should look like when you run the code above *http://localhost=4000/api/common/login* and choose the POST method.
-![POSTMAN](https://ibb.co/8jjTD42)
+![POSTMAN](<a href="https://ibb.co/8jjTD42"><img src="https://i.ibb.co/CnnN5sv/Screen-Shot-2023-01-06-at-6-28-32-PM.png" alt="Screen-Shot-2023-01-06-at-6-28-32-PM" border="0" /></a>)
  
 ## Credits
 
