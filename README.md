@@ -112,15 +112,30 @@ const login = asyncHandler(async(req,res)=>{
 })
 ```
 This is how your Postman window should look like when you run the code above *http://localhost=4000/api/common/login* and choose the POST method.
-![POSTMAN](<a href="https://ibb.co/8jjTD42"><img src="https://i.ibb.co/CnnN5sv/Screen-Shot-2023-01-06-at-6-28-32-PM.png" alt="Screen-Shot-2023-01-06-at-6-28-32-PM" border="0" /></a>)
+![POSTMAN](https://ibb.co/8jjTD42)
  
+
 ## Credits
+These are some of the videos we used that helped us understand the MERN Stack and gave us a head start on our code:
+```
+https://www.youtube.com/channel/UC29ju8bIPH5as8OGnQzwJyA
+https://www.youtube.com/channel/UCW5YeuERMmlnqo4oq8vwUpg
+https://www.youtube.com/playlist?list=PLZlA0Gpn_vH_uZs4vJMIhcinABSTUH2bY
+https://www.youtube.com/watch?v=fgTGADljAeg
+https://www.youtube.com/playlist?list=PLZlA0Gpn_vH_NT5zPVp18nGe_W9LqBDQK
+https://www.youtube.com/watch?v=mbsmsi7l3r4
+https://www.youtube.com/watch?v=-RCnNyD0L-s
+https://dev.to/salarc123/mern-stack-authentication-tutorial-part-1-the-backend-1c57
+```
+
+
+## License 
+Apache 2.0 https://img.shields.io/npm/l/apache
+
+### Done By:
 
 Abdullah El-Dahrawy 49-5825
 Omar Khaled 49-8076
 Aseel Khedr 49-0687
 Ali El-Hennawi 49-0687
 Rahma El-Shamy 49-0999
-
-## License 
-Apache 2.0 https://img.shields.io/npm/l/apache
